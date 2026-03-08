@@ -4,7 +4,7 @@ ZSH_THEME="bira"
 
 # 2. 定义 OMZ 插件列表 (只放 OMZ 自带的，或者已放入 $ZSH_CUSTOM 的)
 # 注意：我们把 zsh-autosuggestions 从这里去掉，改用下面的手动加载方式
-plugins=(git z extract web-search)
+plugins=(git extract web-search)
 
 # 3. 启动 Oh My Zsh
 source $ZSH/oh-my-zsh.sh
