@@ -30,3 +30,8 @@ eval "$(zoxide init zsh)"
 # 它会启用 Ctrl+T (找文件), Ctrl+R (找历史命令), Alt+C (切换目录)
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
+
+# 启动 Homebrew (如果存在则启动)
+if [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi
