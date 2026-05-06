@@ -14,6 +14,7 @@ chezmoi apply ~/.zshrc ~/.config/zsh
 
 The first apply also runs `run_once_install_zsh.sh.tmpl`, which:
 
+- clones `oh-my-zsh` into `~/.oh-my-zsh`
 - clones zsh plugins into `~/.config/zsh/plugins`
 - clones `powerlevel10k` into `~/.oh-my-zsh/custom/themes/powerlevel10k`
 - tries to install `bat`, `lsd`, `tldr`, `ranger`, `fzf`, and `zoxide`

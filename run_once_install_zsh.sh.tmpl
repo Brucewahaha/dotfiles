@@ -75,8 +75,10 @@ ensure_git_repo() {
 
 install_zsh_plugins() {
     plugin_dir="$HOME/.config/zsh/plugins"
-    theme_dir="$HOME/.oh-my-zsh/custom/themes"
+    omz_dir="$HOME/.oh-my-zsh"
+    theme_dir="$omz_dir/custom/themes"
 
+    ensure_git_repo https://github.com/ohmyzsh/ohmyzsh.git "$omz_dir" || return 1
     mkdir -p "$plugin_dir"
     mkdir -p "$theme_dir"
     ensure_git_repo https://github.com/zsh-users/zsh-autosuggestions.git "$plugin_dir/zsh-autosuggestions" || return 1
