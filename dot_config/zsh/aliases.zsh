@@ -14,11 +14,10 @@ else
 fi
 
 # 2. bat (替代 cat)
-# 注意：这里同时处理了原生 bat 和 Debian 系的 batcat
 if (( $+commands[bat] )); then
-    alias cat='bat'
+    alias cat='bat --style=plain'
 elif (( $+commands[batcat] )); then
-    alias cat='batcat'
+    alias cat='batcat --style=plain'
 fi
 
 # 3. ranger (文件浏览器)

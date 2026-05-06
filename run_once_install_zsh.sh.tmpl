@@ -1,0 +1,121 @@
+#!/bin/sh
+
+set -u
+
+install_with_brew() {
+    package="$1"
+    if command -v brew >/dev/null 2>&1; then
+        brew install "$package"
+        return $?
+    fi
+    return 1
+}
+
+install_with_pacman() {
+    package="$1"
+    if command -v pacman >/dev/null 2>&1; then
+        sudo pacman -S --noconfirm "$package"
+        return $?
+    fi
+    return 1
+}
+
+install_with_apt() {
+    package="$1"
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y "$package"
+        return $?
+    fi
+    return 1
+}
+
+install_with_cargo() {
+    package="$1"
+    if command -v cargo >/dev/null 2>&1; then
+        cargo install "$package"
+        return $?
+    fi
+    return 1
+}
+
+ensure_git_repo() {
+    url="$1"
+    dir="$2"
+
+    if ! command -v git >/dev/null 2>&1; then
+        printf 'failed to install plugin from %s: git not found\n' "$url" >&2
+        return 1
+    fi
+
+    if [ -d "$dir/.git" ]; then
+        if git -C "$dir" pull --ff-only; then
+            return 0
+        fi
+
+        printf 'failed to update plugin repo %s\n' "$dir" >&2
+        return 1
+    fi
+
+    if [ -d "$dir" ]; then
+        backup="$dir.backup.$(date +%Y%m%d%H%M%S)"
+        printf 'warning: %s exists but is not a git repo, moving it to %s\n' "$dir" "$backup" >&2
+        if ! mv "$dir" "$backup"; then
+            printf 'failed to move existing plugin dir %s\n' "$dir" >&2
+            return 1
+        fi
+    fi
+
+    if git clone "$url" "$dir"; then
+        return 0
+    fi
+
+    printf 'failed to clone plugin repo %s\n' "$url" >&2
+    return 1
+}
+
+install_zsh_plugins() {
+    plugin_dir="$HOME/.config/zsh/plugins"
+    theme_dir="$HOME/.oh-my-zsh/custom/themes"
+
+    mkdir -p "$plugin_dir"
+    mkdir -p "$theme_dir"
+    ensure_git_repo https://github.com/zsh-users/zsh-autosuggestions.git "$plugin_dir/zsh-autosuggestions" || return 1
+    ensure_git_repo https://github.com/zsh-users/zsh-syntax-highlighting.git "$plugin_dir/zsh-syntax-highlighting" || return 1
+    ensure_git_repo https://github.com/romkatv/powerlevel10k.git "$theme_dir/powerlevel10k" || return 1
+}
+
+install_dependency() {
+    package="$1"
+    binary="$2"
+    apt_package="${3:-$1}"
+
+    if command -v "$binary" >/dev/null 2>&1; then
+        printf 'already installed: %s\n' "$binary"
+        return 0
+    fi
+
+    install_with_brew "$package" || \
+        install_with_pacman "$package" || \
+        install_with_apt "$apt_package" || \
+        install_with_cargo "$package"
+
+    if command -v "$binary" >/dev/null 2>&1; then
+        printf 'installed: %s\n' "$binary"
+        return 0
+    fi
+
+    printf 'warning: failed to install %s\n' "$package" >&2
+    return 0
+}
+
+main() {
+    install_zsh_plugins || return 1
+    install_dependency bat bat bat
+    install_dependency lsd lsd lsd
+    install_dependency tldr tldr tealdeer
+    install_dependency ranger ranger ranger
+    install_dependency fzf fzf fzf
+    install_dependency zoxide zoxide zoxide
+}
+
+main "$@"
