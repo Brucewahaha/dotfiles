@@ -12,7 +12,17 @@ if [ -f "$HOME/.p10k.zsh" ]; then
     source "$HOME/.p10k.zsh"
 fi
 
-# 4. 加载第三方插件
+# 4. 启动 Homebrew 和本地环境
+if [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi
+
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+
+# 5. 本地工具路径
+export PATH="$HOME/bin/:$PATH"
+
+# 6. 加载第三方插件
 export ZSH_CUSTOM_PLUGINS="$HOME/.config/zsh/plugins"
 
 if [ -d "$ZSH_CUSTOM_PLUGINS" ]; then
@@ -20,17 +30,17 @@ if [ -d "$ZSH_CUSTOM_PLUGINS" ]; then
     [ -f "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "$ZSH_CUSTOM_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-# 5. 加载个人别名
+# 7. 加载个人别名
 if [ -f "$HOME/.config/zsh/aliases.zsh" ]; then
     source "$HOME/.config/zsh/aliases.zsh"
 fi
 
-# 6. 初始化 zoxide
+# 8. 初始化 zoxide
 if (( $+commands[zoxide] )); then
     eval "$(zoxide init zsh)"
 fi
 
-# 7. 初始化 fzf
+# 9. 初始化 fzf
 if [ -f /usr/share/fzf/key-bindings.zsh ]; then
     source /usr/share/fzf/key-bindings.zsh
 elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
@@ -50,13 +60,3 @@ elif [ -f "$HOME/.fzf/shell/completion.zsh" ]; then
 elif [ -f "/home/linuxbrew/.linuxbrew/opt/fzf/shell/completion.zsh" ]; then
     source "/home/linuxbrew/.linuxbrew/opt/fzf/shell/completion.zsh"
 fi
-
-# 8. 启动 Homebrew
-if [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
-fi
-
-[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
-
-# 9. 本地工具路径
-export PATH="$HOME/bin/:$PATH"
