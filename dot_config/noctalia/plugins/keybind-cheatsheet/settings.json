@@ -1,0 +1,652 @@
+{
+  "cheatsheetData": [
+    {
+      "title": "Applications",
+      "binds": [
+        {
+          "keys": "Alt + D",
+          "desc": "Open the File Manager",
+          "_verb": "spawn",
+          "_mods": "Alt",
+          "_mainKey": "D"
+        },
+        {
+          "keys": "Alt + Ctrl + T",
+          "desc": "Open a Terminal",
+          "_verb": "spawn",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "T"
+        },
+        {
+          "keys": "Alt + D",
+          "desc": "Run an Application",
+          "_verb": "spawn",
+          "_mods": "Alt",
+          "_mainKey": "D"
+        },
+        {
+          "keys": "Vol Up",
+          "desc": "Run: wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+",
+          "_verb": "spawn-sh",
+          "_mods": "",
+          "_mainKey": "XF86AudioRaiseVolume"
+        },
+        {
+          "keys": "Vol Down",
+          "desc": "Run: wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-",
+          "_verb": "spawn-sh",
+          "_mods": "",
+          "_mainKey": "XF86AudioLowerVolume"
+        },
+        {
+          "keys": "Mute",
+          "desc": "Run: wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+          "_verb": "spawn-sh",
+          "_mods": "",
+          "_mainKey": "XF86AudioMute"
+        },
+        {
+          "keys": "Mic Mute",
+          "desc": "Run: wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+          "_verb": "spawn-sh",
+          "_mods": "",
+          "_mainKey": "XF86AudioMicMute"
+        },
+        {
+          "keys": "Bright Up",
+          "desc": "Run: brightnessctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86MonBrightnessUp"
+        },
+        {
+          "keys": "Bright Down",
+          "desc": "Run: brightnessctl",
+          "_verb": "spawn",
+          "_mods": "",
+          "_mainKey": "XF86MonBrightnessDown"
+        },
+        {
+          "keys": "Alt + TouchpadScrollDown",
+          "desc": "Run: wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02+",
+          "_verb": "spawn-sh",
+          "_mods": "Alt",
+          "_mainKey": "TouchpadScrollDown"
+        },
+        {
+          "keys": "Alt + TouchpadScrollUp",
+          "desc": "Run: wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-",
+          "_verb": "spawn-sh",
+          "_mods": "Alt",
+          "_mainKey": "TouchpadScrollUp"
+        }
+      ]
+    },
+    {
+      "title": "Window Management",
+      "binds": [
+        {
+          "keys": "Alt + Q",
+          "desc": "Close Window",
+          "_verb": "close-window",
+          "_mods": "Alt",
+          "_mainKey": "Q"
+        },
+        {
+          "keys": "Alt + Shift + F",
+          "desc": "Fullscreen Window",
+          "_verb": "fullscreen-window",
+          "_mods": "Alt+Shift",
+          "_mainKey": "F"
+        }
+      ]
+    },
+    {
+      "title": "Column Navigation",
+      "binds": [
+        {
+          "keys": "Alt + H",
+          "desc": "Focus Column Left",
+          "_verb": "focus-column-left",
+          "_mods": "Alt",
+          "_mainKey": "H"
+        },
+        {
+          "keys": "Alt + L",
+          "desc": "Focus Column Right",
+          "_verb": "focus-column-right",
+          "_mods": "Alt",
+          "_mainKey": "L"
+        },
+        {
+          "keys": "Alt + Home",
+          "desc": "Focus Column First",
+          "_verb": "focus-column-first",
+          "_mods": "Alt",
+          "_mainKey": "Home"
+        },
+        {
+          "keys": "Alt + End",
+          "desc": "Focus Column Last",
+          "_verb": "focus-column-last",
+          "_mods": "Alt",
+          "_mainKey": "End"
+        },
+        {
+          "keys": "Alt + WheelScrollRight",
+          "desc": "Focus Column Right",
+          "_verb": "focus-column-right",
+          "_mods": "Alt",
+          "_mainKey": "WheelScrollRight"
+        },
+        {
+          "keys": "Alt + WheelScrollLeft",
+          "desc": "Focus Column Left",
+          "_verb": "focus-column-left",
+          "_mods": "Alt",
+          "_mainKey": "WheelScrollLeft"
+        },
+        {
+          "keys": "Alt + Shift + WheelScrollDown",
+          "desc": "Focus Column Right",
+          "_verb": "focus-column-right",
+          "_mods": "Alt+Shift",
+          "_mainKey": "WheelScrollDown"
+        },
+        {
+          "keys": "Alt + Shift + WheelScrollUp",
+          "desc": "Focus Column Left",
+          "_verb": "focus-column-left",
+          "_mods": "Alt+Shift",
+          "_mainKey": "WheelScrollUp"
+        }
+      ]
+    },
+    {
+      "title": "Window Focus",
+      "binds": [
+        {
+          "keys": "Alt + J",
+          "desc": "Focus Window Down",
+          "_verb": "focus-window-down",
+          "_mods": "Alt",
+          "_mainKey": "J"
+        },
+        {
+          "keys": "Alt + K",
+          "desc": "Focus Window Up",
+          "_verb": "focus-window-up",
+          "_mods": "Alt",
+          "_mainKey": "K"
+        },
+        {
+          "keys": "Alt + E",
+          "desc": "Focus Window Or Workspace Down",
+          "_verb": "focus-window-or-workspace-down",
+          "_mods": "Alt",
+          "_mainKey": "E"
+        },
+        {
+          "keys": "Alt + U",
+          "desc": "Focus Window Or Workspace Up",
+          "_verb": "focus-window-or-workspace-up",
+          "_mods": "Alt",
+          "_mainKey": "U"
+        }
+      ]
+    },
+    {
+      "title": "Workspace Navigation",
+      "binds": [
+        {
+          "keys": "Alt + N",
+          "desc": "Focus Workspace Down",
+          "_verb": "focus-workspace-down",
+          "_mods": "Alt",
+          "_mainKey": "N"
+        },
+        {
+          "keys": "Alt + P",
+          "desc": "Focus Workspace Up",
+          "_verb": "focus-workspace-up",
+          "_mods": "Alt",
+          "_mainKey": "P"
+        },
+        {
+          "keys": "Alt + WheelScrollDown",
+          "desc": "Focus Workspace Down",
+          "_verb": "focus-workspace-down",
+          "_mods": "Alt",
+          "_mainKey": "WheelScrollDown"
+        },
+        {
+          "keys": "Alt + WheelScrollUp",
+          "desc": "Focus Workspace Up",
+          "_verb": "focus-workspace-up",
+          "_mods": "Alt",
+          "_mainKey": "WheelScrollUp"
+        },
+        {
+          "keys": "Alt + 1-9",
+          "desc": "Focus Workspace 1-9",
+          "_verb": "focus-workspace",
+          "_mods": "Alt",
+          "_mainKey": "1-9",
+          "_merged": true
+        },
+        {
+          "keys": "Alt + 0",
+          "desc": "Focus Workspace 10",
+          "_verb": "focus-workspace",
+          "_mods": "Alt",
+          "_mainKey": "0"
+        }
+      ]
+    },
+    {
+      "title": "Move Columns",
+      "binds": [
+        {
+          "keys": "Alt + Shift + H",
+          "desc": "Move Column Left",
+          "_verb": "move-column-left",
+          "_mods": "Alt+Shift",
+          "_mainKey": "H"
+        },
+        {
+          "keys": "Alt + Shift + L",
+          "desc": "Move Column Right",
+          "_verb": "move-column-right",
+          "_mods": "Alt+Shift",
+          "_mainKey": "L"
+        },
+        {
+          "keys": "Alt + Shift + Home",
+          "desc": "Move Column To First",
+          "_verb": "move-column-to-first",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Home"
+        },
+        {
+          "keys": "Alt + Shift + End",
+          "desc": "Move Column To Last",
+          "_verb": "move-column-to-last",
+          "_mods": "Alt+Shift",
+          "_mainKey": "End"
+        },
+        {
+          "keys": "Alt + Ctrl + N",
+          "desc": "Move Column To Workspace Down",
+          "_verb": "move-column-to-workspace-down",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "N"
+        },
+        {
+          "keys": "Alt + Ctrl + P",
+          "desc": "Move Column To Workspace Up",
+          "_verb": "move-column-to-workspace-up",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "P"
+        },
+        {
+          "keys": "Alt + Shift + A",
+          "desc": "Move Column To Monitor Left",
+          "_verb": "move-column-to-monitor-left",
+          "_mods": "Alt+Shift",
+          "_mainKey": "A"
+        },
+        {
+          "keys": "Alt + Shift + S",
+          "desc": "Move Column To Monitor Down",
+          "_verb": "move-column-to-monitor-down",
+          "_mods": "Alt+Shift",
+          "_mainKey": "S"
+        },
+        {
+          "keys": "Alt + Shift + W",
+          "desc": "Move Column To Monitor Up",
+          "_verb": "move-column-to-monitor-up",
+          "_mods": "Alt+Shift",
+          "_mainKey": "W"
+        },
+        {
+          "keys": "Alt + Shift + D",
+          "desc": "Move Column To Monitor Right",
+          "_verb": "move-column-to-monitor-right",
+          "_mods": "Alt+Shift",
+          "_mainKey": "D"
+        },
+        {
+          "keys": "Alt + Ctrl + WheelScrollDown",
+          "desc": "Move Column To Workspace Down",
+          "_verb": "move-column-to-workspace-down",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "WheelScrollDown"
+        },
+        {
+          "keys": "Alt + Ctrl + WheelScrollUp",
+          "desc": "Move Column To Workspace Up",
+          "_verb": "move-column-to-workspace-up",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "WheelScrollUp"
+        },
+        {
+          "keys": "Alt + Ctrl + WheelScrollRight",
+          "desc": "Move Column Right",
+          "_verb": "move-column-right",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "WheelScrollRight"
+        },
+        {
+          "keys": "Alt + Ctrl + WheelScrollLeft",
+          "desc": "Move Column Left",
+          "_verb": "move-column-left",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "WheelScrollLeft"
+        },
+        {
+          "keys": "Alt + Ctrl + Shift + WheelScrollDown",
+          "desc": "Move Column Right",
+          "_verb": "move-column-right",
+          "_mods": "Alt+Ctrl+Shift",
+          "_mainKey": "WheelScrollDown"
+        },
+        {
+          "keys": "Alt + Ctrl + Shift + WheelScrollUp",
+          "desc": "Move Column Left",
+          "_verb": "move-column-left",
+          "_mods": "Alt+Ctrl+Shift",
+          "_mainKey": "WheelScrollUp"
+        },
+        {
+          "keys": "Alt + Shift + 1-9",
+          "desc": "Move Column To Workspace 1-9",
+          "_verb": "move-column-to-workspace",
+          "_mods": "Alt+Shift",
+          "_mainKey": "1-9",
+          "_merged": true
+        },
+        {
+          "keys": "Alt + Shift + 0",
+          "desc": "Move Column To Workspace 10",
+          "_verb": "move-column-to-workspace",
+          "_mods": "Alt+Shift",
+          "_mainKey": "0"
+        }
+      ]
+    },
+    {
+      "title": "Move Windows",
+      "binds": [
+        {
+          "keys": "Alt + Shift + J",
+          "desc": "Move Window Down",
+          "_verb": "move-window-down",
+          "_mods": "Alt+Shift",
+          "_mainKey": "J"
+        },
+        {
+          "keys": "Alt + Shift + K",
+          "desc": "Move Window Up",
+          "_verb": "move-window-up",
+          "_mods": "Alt+Shift",
+          "_mainKey": "K"
+        },
+        {
+          "keys": "Alt + Shift + E",
+          "desc": "Move Window Down Or To Workspace Down",
+          "_verb": "move-window-down-or-to-workspace-down",
+          "_mods": "Alt+Shift",
+          "_mainKey": "E"
+        },
+        {
+          "keys": "Alt + Shift + U",
+          "desc": "Move Window Up Or To Workspace Up",
+          "_verb": "move-window-up-or-to-workspace-up",
+          "_mods": "Alt+Shift",
+          "_mainKey": "U"
+        }
+      ]
+    },
+    {
+      "title": "Column Width",
+      "binds": [
+        {
+          "keys": "Alt + R",
+          "desc": "Switch Preset Column Width",
+          "_verb": "switch-preset-column-width",
+          "_mods": "Alt",
+          "_mainKey": "R"
+        },
+        {
+          "keys": "Alt + Minus",
+          "desc": "Set Column Width \" 10%\"",
+          "_verb": "set-column-width",
+          "_mods": "Alt",
+          "_mainKey": "Minus"
+        },
+        {
+          "keys": "Alt + Equal",
+          "desc": "Set Column Width \"+10%\"",
+          "_verb": "set-column-width",
+          "_mods": "Alt",
+          "_mainKey": "Equal"
+        }
+      ]
+    },
+    {
+      "title": "Power",
+      "binds": [
+        {
+          "keys": "Alt + Shift + P",
+          "desc": "Power Off Monitors",
+          "_verb": "power-off-monitors",
+          "_mods": "Alt+Shift",
+          "_mainKey": "P"
+        }
+      ]
+    },
+    {
+      "title": "System",
+      "binds": [
+        {
+          "keys": "Alt + Shift + Q",
+          "desc": "Quit",
+          "_verb": "quit",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Q"
+        }
+      ]
+    },
+    {
+      "title": "Other",
+      "binds": [
+        {
+          "keys": "Alt + Shift + Slash",
+          "desc": "Show Hotkey Overlay",
+          "_verb": "show-hotkey-overlay",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Slash"
+        },
+        {
+          "keys": "Alt + Tab",
+          "desc": "Toggle Overview",
+          "_verb": "toggle-overview",
+          "_mods": "Alt",
+          "_mainKey": "Tab"
+        },
+        {
+          "keys": "Alt + BracketLeft",
+          "desc": "Consume Or Expel Window Left",
+          "_verb": "consume-or-expel-window-left",
+          "_mods": "Alt",
+          "_mainKey": "BracketLeft"
+        },
+        {
+          "keys": "Alt + BracketRight",
+          "desc": "Consume Or Expel Window Right",
+          "_verb": "consume-or-expel-window-right",
+          "_mods": "Alt",
+          "_mainKey": "BracketRight"
+        },
+        {
+          "keys": "Alt + Shift + Page_Down",
+          "desc": "Move Workspace Down",
+          "_verb": "move-workspace-down",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Page_Down"
+        },
+        {
+          "keys": "Alt + Shift + Page_Up",
+          "desc": "Move Workspace Up",
+          "_verb": "move-workspace-up",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Page_Up"
+        },
+        {
+          "keys": "Alt + Ctrl + H",
+          "desc": "Focus Monitor Left",
+          "_verb": "focus-monitor-left",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "H"
+        },
+        {
+          "keys": "Alt + Ctrl + J",
+          "desc": "Focus Monitor Down",
+          "_verb": "focus-monitor-down",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "J"
+        },
+        {
+          "keys": "Alt + Ctrl + K",
+          "desc": "Focus Monitor Up",
+          "_verb": "focus-monitor-up",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "K"
+        },
+        {
+          "keys": "Alt + Ctrl + L",
+          "desc": "Focus Monitor Right",
+          "_verb": "focus-monitor-right",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "L"
+        },
+        {
+          "keys": "Alt + W",
+          "desc": "Toggle Windowed Fullscreen",
+          "_verb": "toggle-windowed-fullscreen",
+          "_mods": "Alt",
+          "_mainKey": "W"
+        },
+        {
+          "keys": "Alt + F",
+          "desc": "Expand Column To Available Width",
+          "_verb": "expand-column-to-available-width",
+          "_mods": "Alt",
+          "_mainKey": "F"
+        },
+        {
+          "keys": "Alt + C",
+          "desc": "Center Column",
+          "_verb": "center-column",
+          "_mods": "Alt",
+          "_mainKey": "C"
+        },
+        {
+          "keys": "Alt + Ctrl + C",
+          "desc": "Center Visible Columns",
+          "_verb": "center-visible-columns",
+          "_mods": "Alt+Ctrl",
+          "_mainKey": "C"
+        },
+        {
+          "keys": "Alt + Shift + R",
+          "desc": "Switch Preset Window Height",
+          "_verb": "switch-preset-window-height",
+          "_mods": "Alt+Shift",
+          "_mainKey": "R"
+        },
+        {
+          "keys": "Alt + Shift + Minus",
+          "desc": "Set Window Height \" 10%\"",
+          "_verb": "set-window-height",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Minus"
+        },
+        {
+          "keys": "Alt + Shift + Equal",
+          "desc": "Set Window Height \"+10%\"",
+          "_verb": "set-window-height",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Equal"
+        },
+        {
+          "keys": "Alt + Shift + Space",
+          "desc": "Toggle Window Floating",
+          "_verb": "toggle-window-floating",
+          "_mods": "Alt+Shift",
+          "_mainKey": "Space"
+        },
+        {
+          "keys": "Alt + Space",
+          "desc": "Switch Focus Between Floating And Tiling",
+          "_verb": "switch-focus-between-floating-and-tiling",
+          "_mods": "Alt",
+          "_mainKey": "Space"
+        },
+        {
+          "keys": "Alt + Escape",
+          "desc": "Toggle Keyboard Shortcuts Inhibit",
+          "_verb": "toggle-keyboard-shortcuts-inhibit",
+          "_mods": "Alt",
+          "_mainKey": "Escape"
+        }
+      ]
+    }
+  ],
+  "detectedCompositor": "niri",
+  "windowWidth": 1400,
+  "windowHeight": 850,
+  "autoHeight": true,
+  "columnCount": 3,
+  "modKeyVariable": "$mod",
+  "hyprlandConfigPath": "~/.config/hypr/hyprland.conf",
+  "hyprlandLuaConfigPath": "~/.config/hypr/hyprland.lua",
+  "hyprlandParserMode": "auto",
+  "niriConfigPath": "~/.config/niri/config.kdl",
+  "mangoConfigPath": "~/.config/mango/config.conf",
+  "mergeSequentialBinds": true,
+  "showUndescribedBinds": true,
+  "splitLargeWorkspaceCategory": true,
+  "workspaceSplitThreshold": 12,
+  "keyColorAlt": "#FF6B6B",
+  "keyColorXF86": "#4ECDC4",
+  "keyColorPrint": "#95E1D3",
+  "keyColorNumeric": "#A8DADC",
+  "keyColorMouse": "#F38181",
+  "keyColorSuper": "",
+  "keyColorCtrl": "",
+  "keyColorShift": "",
+  "keyColorDefault": "#6C757D",
+  "keyLabelColor": "#FFFFFF",
+  "keyTextSuper": "",
+  "keyTextCtrl": "",
+  "keyTextShift": "",
+  "keyTextAlt": "",
+  "keyTextXF86": "",
+  "keyTextPrint": "",
+  "keyTextNumeric": "",
+  "keyTextMouse": "",
+  "keyTextDefault": "",
+  "keyColorMod2": "",
+  "keyColorMod3": "",
+  "keyColorMod5": "",
+  "keyTextMod2": "",
+  "keyTextMod3": "",
+  "keyTextMod5": "",
+  "keyLabelMod2": "",
+  "keyLabelMod3": "",
+  "keyLabelMod5": "",
+  "descriptionTextColor": "",
+  "bindOverrides": {}
+}

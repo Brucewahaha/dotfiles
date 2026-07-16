@@ -20,9 +20,9 @@ elif (( $+commands[batcat] )); then
     alias cat='batcat --style=plain'
 fi
 
-# 3. ranger (文件浏览器)
-if (( $+commands[ranger] )); then
-    alias ra='ranger'
+# 3. yazi (文件浏览器)
+if (( $+commands[yazi] )); then
+    alias ya='yazi'
 fi
 
 # 4. tldr (替代 help)

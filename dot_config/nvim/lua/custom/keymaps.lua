@@ -8,6 +8,12 @@ vim.keymap.set('i', 'jj', '<Esc>', { desc = 'Exit insert mode' })
 -- C-n 取消高亮
 vim.keymap.set('n', '<C-n>', ':nohlsearch<CR>', { desc = 'Clear highlight' })
 
+-- Match the common VS Code comment shortcut. Some terminals send Ctrl+/ as Ctrl-_.
+for _, key in ipairs { '<C-/>', '<C-_>' } do
+  vim.keymap.set('n', key, 'gcc', { remap = true, desc = 'Toggle line comment' })
+  vim.keymap.set('x', key, 'gc', { remap = true, desc = 'Toggle comment' })
+end
+
 
 -- [[ 跳转与资源管理器 ]]
 -- <leader>e 打开文件树 (需开启 neo-tree 插件)

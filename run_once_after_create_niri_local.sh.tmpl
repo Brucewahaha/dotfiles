@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eu
+
+local_config="$HOME/.config/niri/local.kdl"
+
+if [ ! -e "$local_config" ]; then
+    mkdir -p "$(dirname "$local_config")"
+    : > "$local_config"
+fi

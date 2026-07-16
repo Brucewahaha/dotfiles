@@ -21,6 +21,13 @@ return {
     filesystem = {
       window = {
         mappings = {
+          ['h'] = 'navigate_up',
+          ['l'] = 'open',
+          ['a'] = 'add',
+          ['r'] = 'rename',
+          ['c'] = 'copy_to_clipboard',
+          ['v'] = 'paste_from_clipboard',
+          ['d'] = 'delete',
           ['\\'] = 'close_window',
         },
       },

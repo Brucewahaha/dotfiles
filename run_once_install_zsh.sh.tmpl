@@ -29,6 +29,24 @@ install_with_apt() {
     return 1
 }
 
+install_with_dnf() {
+    package="$1"
+    if command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y "$package"
+        return $?
+    fi
+    return 1
+}
+
+install_with_nix() {
+    package="$1"
+    if command -v nix >/dev/null 2>&1; then
+        nix profile install "nixpkgs#$package"
+        return $?
+    fi
+    return 1
+}
+
 install_with_cargo() {
     package="$1"
     if command -v cargo >/dev/null 2>&1; then
@@ -36,6 +54,14 @@ install_with_cargo() {
         return $?
     fi
     return 1
+}
+
+command_available() {
+    case "$1" in
+        bat) command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1 ;;
+        fd) command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1 ;;
+        *) command -v "$1" >/dev/null 2>&1 ;;
+    esac
 }
 
 ensure_git_repo() {
@@ -90,34 +116,48 @@ install_dependency() {
     package="$1"
     binary="$2"
     apt_package="${3:-$1}"
+    fedora_package="${4:-$1}"
+    nix_package="${5:-$1}"
+    brew_package="${6:-$1}"
 
-    if command -v "$binary" >/dev/null 2>&1; then
+    if command_available "$binary"; then
         printf 'already installed: %s\n' "$binary"
         return 0
     fi
 
-    install_with_brew "$package" || \
+    install_with_brew "$brew_package" || \
         install_with_pacman "$package" || \
+        install_with_dnf "$fedora_package" || \
         install_with_apt "$apt_package" || \
+        install_with_nix "$nix_package" || \
         install_with_cargo "$package"
 
-    if command -v "$binary" >/dev/null 2>&1; then
+    if command_available "$binary"; then
         printf 'installed: %s\n' "$binary"
         return 0
     fi
 
     printf 'warning: failed to install %s\n' "$package" >&2
-    return 0
+    return 1
 }
 
 main() {
+    install_dependency git git git || return 1
+    install_dependency zsh zsh zsh || return 1
     install_zsh_plugins || return 1
-    install_dependency bat bat bat
-    install_dependency lsd lsd lsd
-    install_dependency tldr tldr tealdeer
-    install_dependency ranger ranger ranger
-    install_dependency fzf fzf fzf
-    install_dependency zoxide zoxide zoxide
+
+    failed=0
+    install_dependency bat bat bat || failed=1
+    install_dependency lsd lsd lsd || failed=1
+    install_dependency tldr tldr tealdeer tealdeer tealdeer tealdeer || failed=1
+    install_dependency fzf fzf fzf || failed=1
+    install_dependency zoxide zoxide zoxide || failed=1
+    install_dependency yazi yazi yazi yazi yazi yazi || failed=1
+    install_dependency ripgrep rg ripgrep ripgrep ripgrep ripgrep || failed=1
+    install_dependency fd fd fd-find fd-find fd fd || failed=1
+    install_dependency direnv direnv direnv direnv direnv direnv || failed=1
+    install_dependency atuin atuin atuin atuin atuin atuin || failed=1
+    return "$failed"
 }
 
 main "$@"
