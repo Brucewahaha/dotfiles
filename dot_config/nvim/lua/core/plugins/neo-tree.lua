@@ -23,6 +23,7 @@ return {
         mappings = {
           ['h'] = 'navigate_up',
           ['l'] = 'open',
+          ['H'] = 'toggle_hidden',
           ['a'] = 'add',
           ['r'] = 'rename',
           ['c'] = 'copy_to_clipboard',

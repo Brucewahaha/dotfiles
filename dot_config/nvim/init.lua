@@ -213,8 +213,10 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
-        { '<leader>t', group = '[T]oggle' },
+         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+         { '<leader>a', group = '[A]I' },
+         { '<leader>o', group = '[O]penCode', mode = { 'n', 'v' } },
+         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
       },
@@ -752,9 +754,18 @@ require('lazy').setup({
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
 
-      sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
-      },
+       sources = {
+         default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+         providers = {
+           minuet = {
+             name = 'minuet',
+             module = 'minuet.blink',
+             async = true,
+             timeout_ms = 3000,
+             score_offset = 50,
+           },
+         },
+       },
 
       snippets = { preset = 'luasnip' },
 

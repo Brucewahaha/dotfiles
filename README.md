@@ -138,7 +138,7 @@ Neovim 插件由 Lazy.nvim 管理，语言工具由 Mason 按需管理。Neovim 
 只应用 Zsh：
 
 ```sh
-chezmoi apply ~/.zshrc ~/.config/zsh
+chezmoi apply ~/.zshenv ~/.config/zsh
 ```
 
 只应用 Niri：
@@ -190,7 +190,7 @@ chezmoi diff
 把家目录中已经修改好的文件重新写回 chezmoi 源目录：
 
 ```sh
-chezmoi re-add ~/.zshrc
+chezmoi re-add ~/.zshenv ~/.config/zsh/.zshrc
 ```
 
 或者使用 `add`：
@@ -202,7 +202,7 @@ chezmoi add ~/.config/niri/config.kdl
 从管理中移除文件，但保留家目录中的文件：
 
 ```sh
-chezmoi forget ~/.zshrc
+chezmoi forget ~/.zshenv ~/.config/zsh/.zshrc
 ```
 
 从远程仓库获取更新并应用：
@@ -222,7 +222,8 @@ chezmoi diff
 ### chezmoi 管理
 
 ```text
-~/.zshrc
+~/.zshenv
+~/.config/zsh/.zshrc
 ~/.p10k.zsh
 ~/.config/zsh/core.zsh
 ~/.config/zsh/aliases.zsh
@@ -299,7 +300,7 @@ niri validate -c ~/.config/niri/config.kdl
 检查 Zsh 语法：
 
 ```sh
-zsh -n ~/.zshrc
+zsh -n ~/.config/zsh/.zshrc
 zsh -n ~/.config/zsh/core.zsh
 zsh -n ~/.config/zsh/aliases.zsh
 ```

@@ -3,13 +3,13 @@
 Apply zsh config files only:
 
 ```sh
-chezmoi apply ~/.zshrc ~/.config/zsh
+chezmoi apply ~/.zshenv ~/.config/zsh
 ```
 
 First-time setup for zsh:
 
 ```sh
-chezmoi apply ~/.zshrc ~/.config/zsh
+chezmoi apply ~/.zshenv ~/.config/zsh
 ```
 
 The first apply also runs `run_once_install_zsh.sh.tmpl`, which:

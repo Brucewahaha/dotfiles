@@ -1,0 +1,39 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "tokyonight",
+  "leader_timeout": 2000,
+  "scroll_speed": 3,
+  "scroll_acceleration": {
+    "enabled": false
+  },
+  "diff_style": "auto",
+  "mouse": true,
+  "keybinds": {
+    "leader": "ctrl+x",
+    "command_list": "ctrl+p",
+    "scrollbar_toggle": "<leader>v",
+    "sidebar_toggle": "<leader>b",
+    "status_view": "<leader>s",
+    "tool_details": "<leader>d",
+    "session_timeline": "<leader>g",
+    "session_new": "<leader>n",
+    "session_list": "<leader>l",
+    "session_compact": "<leader>c",
+    "session_undo": "<leader>u",
+    "session_redo": "<leader>r",
+    "messages_first": "home,ctrl+g",
+    "messages_last": "end,ctrl+alt+g",
+    "messages_last_user": "<leader>j",
+    "messages_copy": "<leader>y",
+    "messages_toggle_conceal": "<leader>h",
+    "messages_page_up": "pageup,ctrl+alt+b",
+    "messages_page_down": "pagedown,ctrl+alt+f",
+    "messages_half_page_up": "ctrl+alt+u",
+    "messages_half_page_down": "ctrl+alt+d"
+  },
+  "attention": {
+    "enabled": true,
+    "notifications": true,
+    "sound": false
+  }
+}
