@@ -37,4 +37,4 @@ The tools setup:
 - tries to install `bat`, `lsd`, `tldr`, `fzf`, `zoxide`, `yazi`, `ripgrep`, `fd`, `direnv`, and `atuin`
 - prints warnings if optional tool installation fails
 
-After the theme is installed, run `p10k configure` to generate your local `~/.p10k.zsh`.
+After the theme is installed, run `p10k configure`, then run `chezmoi re-add ~/.p10k.zsh` to preserve the generated configuration.

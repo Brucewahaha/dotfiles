@@ -1,309 +1,175 @@
 # Dotfiles
 
-这是使用 [chezmoi](https://www.chezmoi.io/) 管理的个人配置。
+使用 [chezmoi](https://www.chezmoi.io/) 管理的个人配置，包含 Zsh、Neovim、OpenCode、tmux、Niri、Noctalia 和 Code - OSS。
 
-当前仓库主要包含：
+## 目录
 
-- Zsh、Oh My Zsh、Powerlevel10k 和常用命令行工具配置
-- Niri 和 Noctalia 配置
-- Neovim 配置及插件锁定文件
-- tmux 配置
-- Code - OSS 用户设置和快捷键
+- [部署](#部署)
+- [Zsh Bootstrap](#zsh-bootstrap)
+- [Zsh](#zsh)
+- [Neovim](#neovim)
+- [OpenCode](#opencode)
+- [Niri 与 Noctalia](#niri-与-noctalia)
+- [tmux](#tmux)
+- [Code - OSS](#code---oss)
+- [Chezmoi 命令](#chezmoi-命令)
 
-## 首次安装前
+## 部署
 
-完整安装前需要准备：
-
-- 能正常运行的 `chezmoi`
-- 可选的包管理器：`pacman`、`dnf`、`apt-get`、Homebrew、Cargo 或 Nix `nix`
-- 网络连接；系统包管理器需要 root 或 passwordless `sudo`
-- 一个可用的 shell；安装脚本会尝试安装 `zsh`
-
-安装脚本不会安装系统包管理器、`sudo`、`chezmoi` 或网络环境本身。
-
-Zsh bootstrap 会按当前环境尝试系统包管理器、已存在的 Homebrew、Cargo 和 Nix。它不会安装包管理器或执行完整系统升级；无法安装的工具只会输出警告。
-
-### Niri
-
-需要提前安装或确认以下程序：
-
-- `niri`
-- `noctalia-shell` 对应的 QuickShell 命令 `qs`
-- `kitty`、`dolphin`
-- `fcitx5`
-- `xwayland-satellite`
-- `playerctl`、`brightnessctl`、`wireplumber`
-- `niri-switch`
-
-这些程序目前由系统包管理器负责，不由 Zsh 安装脚本安装。
-
-安装后用下面的命令查看显示器名称：
-
-```sh
-niri msg outputs
-```
-
-显示器、分辨率、缩放和位置配置位于：
-
-```text
-~/.config/niri/local.kdl
-```
-
-这个文件不由 chezmoi 管理，可以在不同电脑上自由修改。
-
-### Noctalia
-
-Noctalia 配置默认引用壁纸目录和显示器名称。部署后请检查：
-
-```text
-~/Pictures/Wallpapers
-~/.face
-```
-
-Noctalia 插件配置会保留插件源和启用状态，但插件本身由 Noctalia 插件管理器下载。
-
-### Code - OSS
-
-当前配置路径是：
-
-```text
-~/.config/Code - OSS/User/settings.json
-~/.config/Code - OSS/User/keybindings.json
-```
-
-扩展本身不由 chezmoi 安装。至少需要根据配置安装对应扩展，例如 Vim、Tokyo Night 等扩展。
-
-### Neovim
-
-Neovim 配置包含以下语言服务器：
-
-- Python、Rust、Go
-- C、C++
-- Haskell、Clojure
-- JavaScript、TypeScript
-- Java、C#、Swift、Kotlin
-- HTML、XML、JSON、Bash
-
-语言服务器不会在 Neovim 启动时全部安装。只有当前系统中对应的可执行文件存在时，Neovim 才会启用该 LSP。打开缺少 LSP 的语言文件时，会提示对应的 `:MasonInstall` 命令。
-
-常用检查命令：
-
-```vim
-:Mason
-:LspInfo
-:ConformInfo
-:checkhealth
-```
-
-部分语言还需要系统运行时：
-
-- JavaScript、TypeScript、HTML、JSON：Node.js 和 npm
-- Go：Go toolchain
-- Rust：Rust toolchain，包含 `cargo`、`rustfmt` 和 `clippy`
-- Java：JDK
-- C#：.NET SDK
-- Swift：Swift toolchain 和 `sourcekit-lsp`
-
-Neovim 的 formatter 和 linter 也按当前环境加载。缺少工具时不会阻止 Neovim 启动，可以在 Mason 中按需安装。
-
-## 首次部署
-
-从远程仓库初始化并应用：
+需要 `chezmoi`、网络和可用 shell。Zsh bootstrap 可使用系统包管理器、已安装的 Homebrew、Cargo 或 Nix；系统包安装需要 root 或 passwordless `sudo`。
 
 ```sh
 chezmoi init --apply <repository-url>
 ```
 
-如果仓库已经初始化：
-
-```sh
-chezmoi apply
-```
-
-首次完整应用会调用一次 Zsh bootstrap，包括：
-
-- 安装或确认 `git` 和 `zsh`
-- 安装 Zsh 使用的命令行工具
-- 克隆 Oh My Zsh、Powerlevel10k 和 Zsh 插件
-- 创建缺失的 `~/.config/niri/local.kdl`
-- 安装 tmux 插件管理器
-
-Neovim 插件由 Lazy.nvim 管理，语言工具由 Mason 按需管理。Neovim 的插件目录、Mason 安装目录和 Treesitter parser 不属于 chezmoi 源文件。
-
-脚本不会覆盖已经存在的本机 `local.kdl`。
-
-## 按需应用配置
-
-只应用 Zsh 配置：
-
-```sh
-chezmoi apply ~/.zshenv ~/.config/zsh
-```
-
-按需安装或更新 Zsh 依赖：
-
-```sh
-~/.config/zsh/bootstrap-zsh.sh all
-~/.config/zsh/bootstrap-zsh.sh all --update
-```
-
-只应用 Niri：
-
-```sh
-chezmoi apply ~/.config/niri
-```
-
-只应用 Noctalia：
-
-```sh
-chezmoi apply ~/.config/noctalia
-```
-
-只应用 Neovim：
-
-```sh
-chezmoi apply ~/.config/nvim
-```
-
-只应用 Code - OSS：
-
-```sh
-chezmoi apply ~/.config/"Code - OSS"/User
-```
-
-应用前建议先查看变更：
-
-```sh
-chezmoi diff
-```
-
-## 常用操作
-
-查看源目录：
-
-```sh
-chezmoi source-path
-chezmoi cd
-```
-
-查看当前目标文件是否偏离源文件：
-
-```sh
-chezmoi status
-chezmoi diff
-```
-
-把家目录中已经修改好的文件重新写回 chezmoi 源目录：
-
-```sh
-chezmoi re-add ~/.zshenv ~/.config/zsh/.zshrc
-```
-
-或者使用 `add`：
-
-```sh
-chezmoi add ~/.config/niri/config.kdl
-```
-
-从管理中移除文件，但保留家目录中的文件：
-
-```sh
-chezmoi forget ~/.zshenv ~/.config/zsh/.zshrc
-```
-
-从远程仓库获取更新并应用：
+已初始化的机器更新配置：
 
 ```sh
 chezmoi update
 ```
 
-更新前最好确保本地修改已经处理完，并先运行：
+首次完整 `chezmoi apply` 会运行一次初始化脚本：创建 Niri 的 `local.kdl`、安装 tmux TPM，并调用 Zsh bootstrap。它们可能下载软件或 Git 仓库；只想更新配置时应使用下方的按需 apply 命令。
+
+## Zsh Bootstrap
+
+Zsh 配置与安装步骤分开。先应用配置，再按需执行 bootstrap：
 
 ```sh
-chezmoi diff
+chezmoi apply ~/.zshenv ~/.config/zsh
+~/.config/zsh/bootstrap-zsh.sh all
 ```
 
-## 文件归属
+Bootstrap 模式：
 
-### chezmoi 管理
+```sh
+~/.config/zsh/bootstrap-zsh.sh core
+~/.config/zsh/bootstrap-zsh.sh tools
+~/.config/zsh/bootstrap-zsh.sh all --update
+```
+
+- `core`：安装或确认 `git`、`zsh`。
+- `tools`：确认 core 后，安装 Oh My Zsh、Powerlevel10k、Zsh 插件和常用命令行工具。
+- `all`：依次运行 core 与 tools。
+- `--update`：更新已克隆的 Zsh 依赖；默认只克隆缺失项。
+
+安装顺序为：有权限的系统包管理器、已有 Homebrew、Cargo、Nix。缺少权限或工具时会告警，但不会中断其余步骤。
+
+## Zsh
+
+`~/.zshenv` 仅设置 `ZDOTDIR`，交互式配置位于 `~/.config/zsh/.zshrc`。这样非交互 shell 不会加载 Oh My Zsh、主题或插件。
+
+本机差异放在以下位置，不要直接修改受管文件：
+
+- `~/.config/zsh/local.zsh`：PATH、环境变量、私有别名和 API 凭据。
+- `~/.p10k.zsh`：chezmoi 管理的 Powerlevel10k 配置。运行 `p10k configure` 后，用 `chezmoi re-add ~/.p10k.zsh` 保留修改。
+- `~/.config/zsh/plugins/`、`.zcompdump*`、`.zsh_history`：插件与 shell 状态。
+
+检查语法：
+
+```sh
+zsh -n ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/core.zsh
+```
+
+## Neovim
+
+需要 Neovim 0.11+。应用配置后，Lazy.nvim 会管理 Neovim 插件：
+
+```sh
+chezmoi apply ~/.config/nvim
+```
+
+在 Neovim 中：
+
+```vim
+:Lazy sync
+:Mason
+:LspInfo
+:ConformInfo
+:TSInstall <language>
+:checkhealth
+```
+
+- Lazy 管理插件；下载失败时使用 `:Lazy sync` 重试。
+- Mason 管理 LSP、formatter、linter。缺少 LSP 时会提示对应的 `:MasonInstall` 命令，不会自动下载。
+- 基础 Treesitter parser 会安装；其他语言按需使用 `:TSInstall`。
+- Go、Rust、Node.js、JDK、.NET、Swift 等语言仍需要各自系统运行时。
+
+本机的 Lazy、Mason、Treesitter 与状态数据位于 `~/.local/share/nvim/`、`~/.local/state/nvim/`。`~/.config/nvim/lazy-lock.json` 是受管文件；执行 `:Lazy update` 后，若要保留版本变更，运行：
+
+```sh
+chezmoi re-add ~/.config/nvim/lazy-lock.json
+```
+
+## OpenCode
+
+OpenCode 配置读取 `OPENAI_API_KEY` 与 `OPENAI_API_URL`。把它们写入 `~/.config/zsh/local.zsh`，不要提交凭据。
+
+Neovim 集成要求当前系统的原生 OpenCode 位于：
 
 ```text
-~/.zshenv
-~/.config/zsh/.zshrc
-~/.p10k.zsh
-~/.config/zsh/core.zsh
-~/.config/zsh/aliases.zsh
-~/.config/zsh/bootstrap-zsh.sh
-~/.config/niri/config.kdl
-~/.config/niri/noctalia.kdl
-~/.config/noctalia/
-~/.config/nvim/
-~/.config/Code - OSS/User/settings.json
-~/.config/Code - OSS/User/keybindings.json
-~/.tmux.conf
+Linux/macOS: ~/.opencode/bin/opencode
+Windows:     ~/.opencode/bin/opencode.exe
 ```
 
-### 本机维护，不由 chezmoi 管理
+安装 OpenCode 后重启 shell 与 Neovim。Neovim 中使用 `<leader>ot` 或 `:OpenCodeToggle` 打开右侧 OpenCode terminal；它与普通 Toggleterm 相互独立。
 
-```text
-~/.config/niri/local.kdl
-~/.config/zsh/local.zsh
-~/.config/zsh/plugins/
-~/.config/zsh/.zcompdump*
-~/.config/zsh/.zsh_history
-~/.local/share/nvim/
-~/.local/state/nvim/
+## Niri 与 Noctalia
+
+按需应用：
+
+```sh
+chezmoi apply ~/.config/niri ~/.config/noctalia
 ```
 
-本机差异应优先放入这些文件，而不是直接修改 chezmoi 管理的通用配置。
+Niri 依赖 `niri`、`qs`、`kitty`、`dolphin`、`fcitx5`、`xwayland-satellite`、`playerctl`、`brightnessctl`、`wireplumber` 和 `niri-switch`。显示器名称可通过以下命令查看：
 
-## Zsh 工具
+```sh
+niri msg outputs
+```
 
-当前已经使用：
+每台机器的显示器、缩放和位置写入未受管的 `~/.config/niri/local.kdl`。首次完整 apply 会创建空文件；受管的 `config.kdl` 会包含它。
 
-| 工具 | 用途 |
-| --- | --- |
-| `bat` | 带高亮和分页的 `cat` 替代品 |
-| `lsd` | `ls` 替代品 |
-| `yazi` | 终端文件管理器 |
-| `fzf` | 模糊搜索和交互选择 |
-| `zoxide` | 基于历史记录的目录跳转 |
-| `tldr` | 简化版命令帮助 |
-| `ripgrep` | 快速文本搜索，命令名为 `rg` |
-| `fd` | 更易用的文件搜索 |
-| `direnv` | 按目录加载项目环境变量 |
-| `atuin` | 增强 shell 历史搜索 |
+Noctalia 当前直接使用 `~/.face` 与 `~/Pictures/Wallpapers`，并在配置中保存为 `/home/bruce/...` 路径。其他机器需要调整 `~/.config/noctalia/settings.json` 后用 `chezmoi re-add` 写回 source，或自行维护这些资源路径。
 
-建议优先考虑：
-
-- `ripgrep`：比 `grep` 更快，Neovim、fzf 工作流常用
-- `fd`：比 `find` 更易用，常用于文件搜索
-- `direnv`：进入项目目录时自动加载项目环境变量
-- `atuin`：增强 shell 历史搜索；使用同步功能前要考虑隐私
-
-同样不建议同时安装功能重叠的工具：
-
-- `lsd` 和 `eza` 二选一
-- Powerlevel10k 和 Starship 二选一
-
-## 配置检查
-
-检查 Niri：
+检查 Niri 配置：
 
 ```sh
 niri validate -c ~/.config/niri/config.kdl
 ```
 
-检查 Zsh 语法：
+## tmux
+
+完整 apply 会运行一次 TPM 安装脚本，安装 `tmux`、克隆 `~/.tmux/plugins/tpm` 并安装配置中的插件。tmux prefix 设置为 `Ctrl+Space`。
+
+本机插件目录 `~/.tmux/plugins/` 由 TPM 管理，不应加入 chezmoi source。
+
+## Code - OSS
+
+应用用户设置：
 
 ```sh
-zsh -n ~/.config/zsh/.zshrc
-zsh -n ~/.config/zsh/core.zsh
-zsh -n ~/.config/zsh/aliases.zsh
+chezmoi apply ~/.config/"Code - OSS"/User
 ```
 
-查看 chezmoi 当前管理的文件：
+扩展不由 chezmoi 安装。配置依赖 Vim 与 Tokyo Night 等扩展；本机扩展目录和缓存保持本地。
+
+## Chezmoi 命令
 
 ```sh
-chezmoi managed
+chezmoi source-path
+chezmoi cd
+chezmoi status
+chezmoi diff
+```
+
+将本机修改写回 source：
+
+```sh
+chezmoi re-add <target-path>
+```
+
+移除管理但保留目标文件：
+
+```sh
+chezmoi forget <target-path>
 ```
