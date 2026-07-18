@@ -1,39 +1,62 @@
 local M = {}
-local terminal
+local buf
+local win
+local job_id
+local opencode_bin = vim.fn.expand '~/.opencode/bin/opencode' .. (vim.fn.has 'win32' == 1 and '.exe' or '')
 
-local function get_terminal()
-  if not terminal then
-    local Terminal = require('toggleterm.terminal').Terminal
-    terminal = Terminal:new {
-      cmd = 'opencode --port',
-      direction = 'vertical',
-      size = function()
-        return math.floor(vim.o.columns * 0.40)
-      end,
-      close_on_exit = false,
-      on_open = function()
-        vim.cmd 'startinsert!'
-      end,
-    }
+local function window_open()
+  return win and vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == buf
+end
+
+local function open_window()
+  vim.cmd 'botright vsplit'
+  win = vim.api.nvim_get_current_win()
+  vim.api.nvim_win_set_width(win, math.max(30, math.floor(vim.o.columns * 0.40)))
+end
+
+local function start()
+  if vim.fn.executable(opencode_bin) ~= 1 then
+    vim.notify('OpenCode is unavailable at ' .. opencode_bin, vim.log.levels.WARN, { title = 'Neovim' })
+    return false
   end
-  return terminal
+
+  buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[buf].bufhidden = 'hide'
+  vim.api.nvim_win_set_buf(win, buf)
+  job_id = vim.fn.termopen({ opencode_bin, '--port' }, {
+    on_exit = function() job_id = nil end,
+  })
+  return job_id > 0
 end
 
 function M.open()
-  get_terminal():open()
+  if window_open() then
+    vim.api.nvim_set_current_win(win)
+  else
+    open_window()
+    if buf and vim.api.nvim_buf_is_valid(buf) and job_id then
+      vim.api.nvim_win_set_buf(win, buf)
+    elseif not start() then
+      vim.api.nvim_win_close(win, true)
+      win = nil
+      return
+    end
+  end
+  vim.cmd 'startinsert'
 end
 
 function M.toggle()
-  get_terminal():toggle()
+  if window_open() then
+    vim.api.nvim_win_close(win, true)
+    win = nil
+  else
+    M.open()
+  end
 end
 
 function M.resize(delta)
-  local current = get_terminal()
-  if not current:is_open() then return end
-
-  vim.api.nvim_win_call(current.window, function()
-    current:resize(vim.api.nvim_win_get_width(current.window) + delta)
-  end)
+  if not window_open() then return end
+  vim.api.nvim_win_set_width(win, math.max(30, vim.api.nvim_win_get_width(win) + delta))
 end
 
 return M

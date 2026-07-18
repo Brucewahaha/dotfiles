@@ -1,0 +1,11 @@
+#!/bin/sh
+
+bootstrap="$HOME/.config/zsh/bootstrap-zsh.sh"
+
+if [ -x "$bootstrap" ]; then
+    "$bootstrap" all
+else
+    printf 'warning: Zsh bootstrap script is unavailable at %s\n' "$bootstrap" >&2
+fi
+
+exit 0

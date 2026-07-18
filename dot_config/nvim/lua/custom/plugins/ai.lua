@@ -24,6 +24,7 @@ return {
   },
   {
     'milanglacier/minuet-ai.nvim',
+    enabled = vim.env.OPENAI_API_KEY ~= nil and vim.env.OPENAI_API_KEY ~= '' and vim.env.OPENAI_API_URL ~= nil and vim.env.OPENAI_API_URL ~= '',
     event = 'InsertEnter',
     opts = {
       provider = 'openai_compatible',
@@ -35,7 +36,7 @@ return {
       provider_options = {
         openai_compatible = {
           api_key = 'OPENAI_API_KEY',
-          end_point = 'https://api.horizon1123.top/v1/chat/completions',
+          end_point = vim.env.OPENAI_API_URL and vim.env.OPENAI_API_URL:gsub('/+$', '') .. '/chat/completions' or nil,
           model = 'gpt-5.2',
           name = 'Horizon',
           optional = {

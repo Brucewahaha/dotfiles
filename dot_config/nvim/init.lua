@@ -31,6 +31,15 @@ vim.opt.clipboard = 'unnamedplus'
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Default to four spaces; guess-indent and .editorconfig override this per file.
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.cmd 'filetype plugin indent on'
+
 -- Enable undo/redo changes even after closing and reopening a file
 vim.o.undofile = true
 
@@ -736,7 +745,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -752,20 +761,36 @@ require('lazy').setup({
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
+          },
+        },
+        accept = {
+          auto_brackets = { enabled = false },
+        },
       },
 
-       sources = {
-         default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
-         providers = {
-           minuet = {
-             name = 'minuet',
-             module = 'minuet.blink',
-             async = true,
-             timeout_ms = 3000,
-             score_offset = 50,
-           },
-         },
-       },
+      sources = (function()
+        local default = { 'lsp', 'path', 'snippets', 'buffer' }
+        local providers = {}
+        local has_credentials = vim.env.OPENAI_API_KEY and vim.env.OPENAI_API_KEY ~= '' and vim.env.OPENAI_API_URL and vim.env.OPENAI_API_URL ~= ''
+        local has_minuet = has_credentials and pcall(require, 'minuet')
+
+        if has_minuet then
+          table.insert(default, 'minuet')
+          providers.minuet = {
+            name = 'minuet',
+            module = 'minuet.blink',
+            async = true,
+            timeout_ms = 2500,
+            score_offset = 50,
+          }
+        end
+
+        return { default = default, providers = providers }
+      end)(),
 
       snippets = { preset = 'luasnip' },
 
@@ -778,8 +803,7 @@ require('lazy').setup({
       -- See :h blink-cmp-config-fuzzy for more information
       fuzzy = { implementation = 'lua' },
 
-      -- Shows a signature help window while you type arguments for a function
-      signature = { enabled = true },
+      signature = { enabled = false },
     },
   },
 
@@ -866,45 +890,6 @@ require('lazy').setup({
       local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
       require('nvim-treesitter').install(parsers)
 
-      ---@param buf integer
-      ---@param language string
-      local function treesitter_try_attach(buf, language)
-        -- check if parser exists and load it
-        if not vim.treesitter.language.add(language) then return end
-        -- enables syntax highlighting and other treesitter features
-        vim.treesitter.start(buf, language)
-
-        -- enables treesitter based folds
-        -- for more info on folds see `:help folds`
-        -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-        -- vim.wo.foldmethod = 'expr'
-
-        -- enables treesitter based indentation
-        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-      end
-
-      local available_parsers = require('nvim-treesitter').get_available()
-      vim.api.nvim_create_autocmd('FileType', {
-        callback = function(args)
-          local buf, filetype = args.buf, args.match
-
-          local language = vim.treesitter.language.get_lang(filetype)
-          if not language then return end
-
-          local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
-
-          if vim.tbl_contains(installed_parsers, language) then
-            -- enable the parser if it is installed
-            treesitter_try_attach(buf, language)
-          elseif vim.tbl_contains(available_parsers, language) then
-            -- if a parser is available in `nvim-treesitter` auto install it, and enable it after the installation is done
-            require('nvim-treesitter').install(language):await(function() treesitter_try_attach(buf, language) end)
-          else
-            -- try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
-            treesitter_try_attach(buf, language)
-          end
-        end,
-      })
     end,
   },
 

@@ -7,6 +7,8 @@ return {
       open_mapping = [[<C-`>]],
       direction = 'horizontal', -- 也可以改成 'float' 变成居中的悬浮终端
       size = 15,
+      insert_mappings = false,
+      terminal_mappings = true,
       shade_terminals = true,
       float_opts = {
         border = 'curved',

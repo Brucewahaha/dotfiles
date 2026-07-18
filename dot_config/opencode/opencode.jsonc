@@ -2,7 +2,7 @@
   "provider": {
     "openai": {
       "options": {
-        "baseURL": "https://api.horizon1123.top/v1",
+        "baseURL": "{env:OPENAI_API_URL}",
         "apiKey": "{env:OPENAI_API_KEY}"
       },
       "models": {

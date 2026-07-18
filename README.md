@@ -15,14 +15,13 @@
 完整安装前需要准备：
 
 - 能正常运行的 `chezmoi`
-- 一个可用的系统包管理器：`pacman`、`dnf`、`apt-get`、Nix `nix` 或 Homebrew
-- `sudo`、`git` 和网络连接；Nix 用户通常不需要 `sudo`
-- 可以安装系统软件的账户或 Nix profile 权限
+- 可选的包管理器：`pacman`、`dnf`、`apt-get`、Homebrew、Cargo 或 Nix `nix`
+- 网络连接；系统包管理器需要 root 或 passwordless `sudo`
 - 一个可用的 shell；安装脚本会尝试安装 `zsh`
 
 安装脚本不会安装系统包管理器、`sudo`、`chezmoi` 或网络环境本身。
 
-Zsh 安装脚本会按当前环境尝试使用 Homebrew、`pacman`、`dnf`、`apt-get`、Nix 和 Cargo。它不会自动执行完整系统升级；如果某个工具依赖额外运行时，脚本会失败并在下一次 `chezmoi apply` 时重试。
+Zsh bootstrap 会按当前环境尝试系统包管理器、已存在的 Homebrew、Cargo 和 Nix。它不会安装包管理器或执行完整系统升级；无法安装的工具只会输出警告。
 
 ### Niri
 
@@ -121,7 +120,7 @@ chezmoi init --apply <repository-url>
 chezmoi apply
 ```
 
-首次完整应用会处理 chezmoi 脚本，包括：
+首次完整应用会调用一次 Zsh bootstrap，包括：
 
 - 安装或确认 `git` 和 `zsh`
 - 安装 Zsh 使用的命令行工具
@@ -135,10 +134,17 @@ Neovim 插件由 Lazy.nvim 管理，语言工具由 Mason 按需管理。Neovim 
 
 ## 按需应用配置
 
-只应用 Zsh：
+只应用 Zsh 配置：
 
 ```sh
 chezmoi apply ~/.zshenv ~/.config/zsh
+```
+
+按需安装或更新 Zsh 依赖：
+
+```sh
+~/.config/zsh/bootstrap-zsh.sh all
+~/.config/zsh/bootstrap-zsh.sh all --update
 ```
 
 只应用 Niri：
@@ -227,6 +233,7 @@ chezmoi diff
 ~/.p10k.zsh
 ~/.config/zsh/core.zsh
 ~/.config/zsh/aliases.zsh
+~/.config/zsh/bootstrap-zsh.sh
 ~/.config/niri/config.kdl
 ~/.config/niri/noctalia.kdl
 ~/.config/noctalia/
@@ -274,20 +281,10 @@ chezmoi diff
 - `direnv`：进入项目目录时自动加载项目环境变量
 - `atuin`：增强 shell 历史搜索；使用同步功能前要考虑隐私
 
-### Yazi 和 Ranger
-
-两者都是终端文件管理器，功能有明显重叠，不建议同时作为默认文件管理器安装。
-
-- `ranger`：Python 实现，成熟、配置资料多，但当前已移除
-- `yazi`：Rust 实现，速度快，预览、归档和异步操作体验更现代，当前使用 `ya` 别名启动
-
-当前只安装和使用 Yazi，不再保留 Ranger 的默认入口。
-
 同样不建议同时安装功能重叠的工具：
 
 - `lsd` 和 `eza` 二选一
 - Powerlevel10k 和 Starship 二选一
-- Ranger 和 Yazi 二选一
 
 ## 配置检查
 
