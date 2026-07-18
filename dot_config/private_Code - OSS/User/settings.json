@@ -1,0 +1,147 @@
+{
+    "workbench.colorTheme": "Tokyo Night Storm",
+    "editor.fontLigatures": false,
+    "editor.fontFamily": "'0xProto Nerd Font Mono', '微软雅黑', monospace",
+    "editor.lineNumbers": "relative",
+    "editor.fontSize": 14,
+    "editor.lineHeight": 1.4,
+    "editor.letterSpacing": 0.6,
+
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.surround": true,
+    // "vim.sneak": true,
+    "vim.useSystemClipboard": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j", "j"],
+            "after": ["<Esc>"]
+        },
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<C-n>"],
+            "commands": [":nohl"]
+        },
+        {
+            "before": ["K"],
+            "commands": ["lineBreakInsert"],
+            "silent": true
+        },
+        {
+            "before": ["s"],
+            "after": ["<leader>", "<leader>", "s"],
+        },
+        {
+            "before": ["<leader>", "e"],
+            "commands": ["workbench.view.explorer"]
+        },
+        {
+            //模仿鼠标悬停在目标位置时展示相关内容
+            "before": ["<leader>", "k"],
+            "commands": ["editor.action.showHover"]
+        },
+        {
+            "before": ["<leader>", "<C-s>"],
+            "commands": ["workbench.action.gotoSymbol"]
+        },
+        {
+            "before": ["<leader>", "f"],
+            "commands": ["workbench.action.quickOpen"]
+        },
+
+        //下述跳转功能配合下面两个一起使用
+        //Ctrl + o：跳回上一个位置（Go Back）。
+        //Ctrl + i：跳向下一个位置（Go Forward）。
+        {
+            //跳转到引用位置
+            "before": ["g", "r"],
+            "commands": ["references-view.findReferences"]
+        },
+        {
+            //跳转到定义位置(小窗口显示)
+            "before": ["g", "p"],
+            "commands": ["editor.action.peekDefinition"]
+        },
+        {
+            //跳转到实现位置
+            "before": ["g", "i"],
+            "commands": ["editor.action.goToImplementation"]
+        },
+        {
+            "before": ["g", "d"],
+            "commands": ["editor.action.revealDefinition"]
+        },
+        {
+            //normal模式下按下 ]+<space> 在当前行下方插入新行
+            "before": ["]", " "],
+            "commands": [
+                {
+                "command": "editor.action.insertLineAfter",
+                }
+            ],
+            "silent": true
+            },
+            //normal模式下按下 [+<space> 在当前行上方插入新行
+            {
+            "before": ["[", " "],
+            "commands": [
+                {
+                "command": "editor.action.insertLineBefore",
+                }
+            ],
+            "silent": true
+        },
+        {
+            "before": ["<C-h>"],
+            "after": ["g", "T"],
+        },
+        {
+            "before": ["<C-l>"],
+            "after": ["g", "t"],
+        },
+        //实现快速全选
+        {
+            "before": ["<leader>", "a"],
+            "after": ["g", "g", "V", "G"]
+        }
+    ],
+
+    "vim.leader": "<space>",
+    "vim.handleKeys": {
+        "<C-f>": false
+    },
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1
+    },
+    // zen模式相关的配置
+    "zenMode.centerLayout": false,
+    "zenMode.hideStatusBar": false,
+    "zenMode.hideLineNumbers": false,
+
+    // 关于编辑器显示的配置
+    "editor.tokenColorCustomizations": {
+        "comments": "#7f7f7f",
+    },
+    "workbench.colorCustomizations": {
+        "editorBracketHighlight.foreground1": "#7AA2F7",
+        "editorBracketHighlight.foreground2": "#5ABDE2",
+        "editorBracketHighlight.foreground3": "#4DB0B8",
+        "editorBracketHighlight.foreground4": "#BB9AF7",
+        "editorBracketHighlight.foreground5": "#F7768E",
+        "editorBracketHighlight.foreground6": "#9ECE6A",
+        "editorIndentGuide.activeBackground1": "#898989" // 焦点行的缩进线颜色
+    },
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": false, // 不同类型的括号使用同一套颜色
+    "editor.bracketPairColorization.enabled": false, // 彩虹括号
+    "editor.semanticHighlighting.enabled": true, // 语义高亮，让语法高亮回到基础的 Token 模式
+    "editor.codeLens": false,            // 隐藏那些漂浮在函数上面的引用计数
+    "editor.occurrencesHighlight": "off", // 关掉自动高亮所有选中的词
+    "editor.guides.bracketPairs": false, // 关掉括号对齐线(会出现一条指引线直接连接两个括号)
+    "editor.guides.indentation": true, // 隐藏所有后台常驻的缩进线
+    "editor.guides.highlightActiveIndentation": true, // 开启高亮功能。注意：当 indentation 为 false 时， 这个功能依然会智能地在光标选中处绘制当前的层级参考线。
+    "editor.inlayHints.enabled": "off",
+}

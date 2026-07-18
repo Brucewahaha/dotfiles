@@ -7,9 +7,28 @@ return {
   event = { 'BufReadPre', 'BufNewFile' },
   config = function()
     local lint = require 'lint'
-    lint.linters_by_ft = {
-      markdown = { 'markdownlint' }, -- Make sure to install `markdownlint` via mason / npm
-    }
+    local linters_by_ft = {}
+    local function add(filetypes, linter, command)
+      if vim.fn.executable(command or linter) == 1 then
+        for _, filetype in ipairs(filetypes) do linters_by_ft[filetype] = { linter } end
+      end
+    end
+
+    add({ 'markdown' }, 'markdownlint-cli2')
+    add({ 'python' }, 'ruff')
+    add({ 'rust' }, 'clippy', 'cargo')
+    add({ 'go' }, 'golangcilint', 'golangci-lint')
+    add({ 'c', 'cpp' }, 'clangtidy', 'clang-tidy')
+    add({ 'haskell' }, 'hlint')
+    add({ 'clojure' }, 'clj-kondo')
+    add({ 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' }, 'eslint_d')
+    add({ 'java' }, 'checkstyle')
+    add({ 'swift' }, 'swiftlint')
+    add({ 'kotlin' }, 'ktlint')
+    add({ 'html' }, 'htmlhint')
+    add({ 'json', 'jsonc' }, 'jsonlint')
+    add({ 'sh', 'bash' }, 'shellcheck')
+    lint.linters_by_ft = linters_by_ft
 
     -- To allow other plugins to add linters to require('lint').linters_by_ft,
     -- instead set linters_by_ft like this:

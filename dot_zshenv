@@ -1,0 +1,2 @@
+# Keep all interactive Zsh startup files under the XDG config directory.
+export ZDOTDIR="$HOME/.config/zsh"

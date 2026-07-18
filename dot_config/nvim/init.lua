@@ -25,10 +25,8 @@ vim.o.mouse = 'a'
 vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
+-- See `:help 'clipboard'` and `:help provider-clipboard`.
+vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -99,10 +97,10 @@ vim.diagnostic.config {
   virtual_text = true, -- Text shows up at the end of the line
   virtual_lines = false, -- Text shows up underneath the line, with virtual lines
 
-  -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
-  jump = { float = true },
 }
 
+vim.keymap.set('n', '[d', function() vim.diagnostic.jump { count = -1, float = true } end, { desc = 'Previous diagnostic' })
+vim.keymap.set('n', ']d', function() vim.diagnostic.jump { count = 1, float = true } end, { desc = 'Next diagnostic' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -188,23 +186,6 @@ require('lazy').setup({
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
   --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    ---@module 'gitsigns'
-    ---@type Gitsigns.Config
-    ---@diagnostic disable-next-line: missing-fields
-    opts = {
-      signs = {
-        add = { text = '+' }, ---@diagnostic disable-line: missing-fields
-        change = { text = '~' }, ---@diagnostic disable-line: missing-fields
-        delete = { text = '_' }, ---@diagnostic disable-line: missing-fields
-        topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
-        changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
-      },
-    },
-  },
-
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -232,8 +213,10 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
-        { '<leader>t', group = '[T]oggle' },
+         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+         { '<leader>a', group = '[A]I' },
+         { '<leader>o', group = '[O]penCode', mode = { 'n', 'v' } },
+         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
       },
@@ -412,7 +395,6 @@ require('lazy').setup({
       },
       -- Maps LSP server names between nvim-lspconfig and Mason package names.
       'mason-org/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
@@ -511,23 +493,23 @@ require('lazy').setup({
         end,
       })
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --  See `:help lsp-config` for information about keys and how to configure
+      -- Enable language servers for the languages used in this setup.
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        -- pyright = {},
-        -- rust_analyzer = {},
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-
-        stylua = {}, -- Used to format Lua code
+        bashls = {},
+        clangd = {},
+        clojure_lsp = {},
+        gopls = {},
+        hls = {},
+        html = {},
+        jdtls = {},
+        jsonls = {},
+        kotlin_language_server = {},
+        lemminx = {},
+        omnisharp = {},
+        pyright = {},
+        rust_analyzer = {},
+        ts_ls = {},
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -559,6 +541,8 @@ require('lazy').setup({
         },
       }
 
+      if vim.fn.executable 'sourcekit-lsp' == 1 then servers.sourcekit = {} end
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -566,17 +550,77 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        -- You can add other tools here that you want Mason to install
-      })
+      local server_commands = {
+        bashls = { 'bash-language-server' },
+        clangd = { 'clangd' },
+        clojure_lsp = { 'clojure-lsp' },
+        gopls = { 'gopls', 'go' },
+        hls = { 'haskell-language-server-wrapper' },
+        html = { 'vscode-html-language-server' },
+        jdtls = { 'jdtls', 'java' },
+        jsonls = { 'vscode-json-language-server' },
+        kotlin_language_server = { 'kotlin-language-server' },
+        lemminx = { 'lemminx' },
+        lua_ls = { 'lua-language-server' },
+        omnisharp = { 'omnisharp', 'dotnet' },
+        pyright = { 'pyright-langserver' },
+        rust_analyzer = { 'rust-analyzer', 'cargo' },
+        sourcekit = { 'sourcekit-lsp' },
+        ts_ls = { 'typescript-language-server' },
+      }
 
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      local function server_available(name)
+        for _, command in ipairs(server_commands[name] or {}) do
+          if vim.fn.executable(command) ~= 1 then return false end
+        end
+        return true
+      end
 
       for name, server in pairs(servers) do
-        vim.lsp.config(name, server)
-        vim.lsp.enable(name)
+        if server_available(name) then
+          vim.lsp.config(name, server)
+          vim.lsp.enable(name)
+        end
       end
+
+      local language_requirements = {
+        bash = { server = 'bashls', packages = 'bash-language-server' },
+        c = { server = 'clangd', packages = 'clangd clang-format' },
+        cpp = { server = 'clangd', packages = 'clangd clang-format' },
+        clojure = { server = 'clojure_lsp', packages = 'clojure-lsp clj-kondo cljfmt' },
+        go = { server = 'gopls', packages = 'gopls gofumpt golangci-lint', runtime = 'Go is also required' },
+        haskell = { server = 'hls', packages = 'haskell-language-server fourmolu hlint' },
+        html = { server = 'html', packages = 'html-lsp prettier', runtime = 'Node.js is also required' },
+        java = { server = 'jdtls', packages = 'jdtls google-java-format checkstyle', runtime = 'a JDK is also required' },
+        javascript = { server = 'ts_ls', packages = 'typescript-language-server prettier eslint_d', runtime = 'Node.js is also required' },
+        javascriptreact = { server = 'ts_ls', packages = 'typescript-language-server prettier eslint_d', runtime = 'Node.js is also required' },
+        json = { server = 'jsonls', packages = 'json-lsp prettier jsonlint', runtime = 'Node.js is also required' },
+        jsonc = { server = 'jsonls', packages = 'json-lsp prettier jsonlint', runtime = 'Node.js is also required' },
+        kotlin = { server = 'kotlin_language_server', packages = 'kotlin-language-server ktlint' },
+        lua = { server = 'lua_ls', packages = 'lua-language-server stylua' },
+        python = { server = 'pyright', packages = 'pyright ruff' },
+        rust = { server = 'rust_analyzer', packages = 'rust-analyzer', runtime = 'Rust toolchain is also required for rustfmt and clippy' },
+        sh = { server = 'bashls', packages = 'bash-language-server shfmt shellcheck' },
+        swift = { server = 'sourcekit', packages = 'swiftformat swiftlint', runtime = 'Swift toolchain is also required' },
+        typescript = { server = 'ts_ls', packages = 'typescript-language-server prettier eslint_d', runtime = 'Node.js is also required' },
+        typescriptreact = { server = 'ts_ls', packages = 'typescript-language-server prettier eslint_d', runtime = 'Node.js is also required' },
+        xml = { server = 'lemminx', packages = 'lemminx xmlformatter' },
+      }
+
+      local notified = {}
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = vim.tbl_keys(language_requirements),
+        callback = function(event)
+          local filetype = vim.bo[event.buf].filetype
+          local requirement = language_requirements[filetype]
+          if requirement and not server_available(requirement.server) and not notified[filetype] then
+            notified[filetype] = true
+            local message = ('LSP for %s is unavailable. Run :MasonInstall %s'):format(filetype, requirement.packages)
+            if requirement.runtime then message = message .. '. ' .. requirement.runtime .. '.' end
+            vim.notify(message, vim.log.levels.WARN, { title = 'Neovim language tools' })
+          end
+        end,
+      })
     end,
   },
 
@@ -612,11 +656,27 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        python = { 'ruff_format' },
+        rust = { 'rustfmt' },
+        go = { 'gofumpt', 'gofmt', stop_after_first = true },
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
+        haskell = { 'fourmolu' },
+        clojure = { 'cljfmt' },
+        javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        java = { 'google-java-format' },
+        cs = { 'csharpier' },
+        swift = { 'swiftformat' },
+        kotlin = { 'ktlint' },
+        html = { 'prettier' },
+        xml = { 'xmlformatter' },
+        json = { 'prettier' },
+        jsonc = { 'prettier' },
+        sh = { 'shfmt' },
+        bash = { 'shfmt' },
       },
     },
   },
@@ -694,9 +754,18 @@ require('lazy').setup({
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
       },
 
-      sources = {
-        default = { 'lsp', 'path', 'snippets' },
-      },
+       sources = {
+         default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+         providers = {
+           minuet = {
+             name = 'minuet',
+             module = 'minuet.blink',
+             async = true,
+             timeout_ms = 3000,
+             score_offset = 50,
+           },
+         },
+       },
 
       snippets = { preset = 'luasnip' },
 
@@ -750,13 +819,16 @@ require('lazy').setup({
   { -- Collection of various small independent plugins/modules
     'nvim-mini/mini.nvim',
     config = function()
-      -- Better Around/Inside textobjects
+       -- Better Around/Inside textobjects
       --
       -- Examples:
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+       require('mini.ai').setup { n_lines = 500 }
+
+       -- Comment lines and visual selections with gc/gcc.
+       require('mini.comment').setup()
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -863,6 +935,9 @@ require('lazy').setup({
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
 }, { ---@diagnostic disable-line: missing-fields
+  rocks = {
+    enabled = false,
+  },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table

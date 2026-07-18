@@ -9,6 +9,7 @@
 ---@module 'lazy'
 ---@type LazySpec
 return {
+  cond = vim.fn.executable 'go' == 1,
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
   -- NOTE: And you can specify dependencies as well
