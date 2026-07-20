@@ -7,6 +7,7 @@ return {
       vim.o.autoread = true
       vim.g.opencode_opts = {
         server = {
+          url = 'http://127.0.0.1:4097',
           start = function()
             require('custom.opencode_terminal').open()
           end,

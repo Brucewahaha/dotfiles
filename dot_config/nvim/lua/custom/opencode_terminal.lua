@@ -2,7 +2,7 @@ local M = {}
 local buf
 local win
 local job_id
-local opencode_bin = vim.fn.expand '~/.opencode/bin/opencode' .. (vim.fn.has 'win32' == 1 and '.exe' or '')
+local opencode_bin = vim.fn.exepath 'opencode'
 
 local function window_open()
   return win and vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == buf
@@ -15,15 +15,15 @@ local function open_window()
 end
 
 local function start()
-  if vim.fn.executable(opencode_bin) ~= 1 then
-    vim.notify('OpenCode is unavailable at ' .. opencode_bin, vim.log.levels.WARN, { title = 'Neovim' })
+  if opencode_bin == '' then
+    vim.notify('OpenCode is unavailable in PATH', vim.log.levels.WARN, { title = 'Neovim' })
     return false
   end
 
   buf = vim.api.nvim_create_buf(false, true)
   vim.bo[buf].bufhidden = 'hide'
   vim.api.nvim_win_set_buf(win, buf)
-  job_id = vim.fn.termopen({ opencode_bin, '--port' }, {
+  job_id = vim.fn.termopen({ opencode_bin, '--port', '4097' }, {
     on_exit = function() job_id = nil end,
   })
   return job_id > 0
