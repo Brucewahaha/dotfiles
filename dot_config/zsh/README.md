@@ -20,12 +20,12 @@ Bootstrap modes:
 ~/.config/zsh/bootstrap-zsh.sh all --update
 ```
 
-`core` installs `git` and `zsh`. `tools` ensures the core dependencies are
-available, then installs the shell framework, plugins, and command-line tools.
-`all` runs both. Existing Git repositories are only updated with `--update`.
+`core` installs `git`, `zsh`, Oh My Zsh, Powerlevel10k, and the Zsh plugins.
+`tools` installs only the optional command-line tools. `all` runs both.
+Existing Git repositories are only updated with `--update`.
 
 The bootstrap detects a usable package manager in this order: system packages
-with root or passwordless sudo, an already-installed Homebrew, Cargo, then Nix.
+with root or passwordless sudo, an already-installed Homebrew, then Nix.
 It never installs a package manager itself. Missing dependencies only produce
 warnings and do not stop the remaining setup.
 

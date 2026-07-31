@@ -820,6 +820,10 @@ require('lazy').setup({
         styles = {
           comments = { italic = false }, -- Disable italics in comments
         },
+        on_highlights = function(hl, colors)
+          hl.IblIndent = { fg = colors.bg_highlight, nocombine = true }
+          hl.IblScope = { fg = colors.blue, nocombine = true }
+        end,
       }
 
       -- Load the colorscheme here.
@@ -890,6 +894,10 @@ require('lazy').setup({
       local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
       require('nvim-treesitter').install(parsers)
 
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('core-treesitter-start', { clear = true }),
+        callback = function(event) pcall(vim.treesitter.start, event.buf) end,
+      })
     end,
   },
 
