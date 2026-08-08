@@ -4,8 +4,8 @@ bootstrap="$HOME/.config/zsh/bootstrap-zsh.sh"
 
 if [ -x "$bootstrap" ]; then
     "$bootstrap" all
+    exit $?
 else
     printf 'warning: Zsh bootstrap script is unavailable at %s\n' "$bootstrap" >&2
+    exit 1
 fi
-
-exit 0

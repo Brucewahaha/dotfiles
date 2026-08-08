@@ -20,21 +20,16 @@ elif (( $+commands[batcat] )); then
     alias cat='batcat --style=plain'
 fi
 
-# 3. yazi (文件浏览器)
-if (( $+commands[yazi] )); then
-    alias ya='yazi'
-fi
-
-# 4. tldr (替代 help)
+# 3. tldr (替代 help)
 if (( $+commands[tldr] )); then
     alias help='tldr'
 fi
 
-# 5. pacman (包管理器 - 仅在 Arch Linux 系生效)
+# 4. pacman (包管理器 - 仅在 Arch Linux 系生效)
 if (( $+commands[pacman] )); then
     alias p='sudo pacman -S'
     alias pu='sudo pacman -Syu'
 fi
 
-# 6. 永远可用的简单别名
+# 5. 永远可用的简单别名
 alias cl='clear'

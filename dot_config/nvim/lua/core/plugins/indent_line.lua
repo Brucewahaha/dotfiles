@@ -1,4 +1,4 @@
--- Add indentation guides even on blank lines
+-- Add subtle indentation guides and emphasize the current scope.
 
 ---@module 'lazy'
 ---@type LazySpec
@@ -9,5 +9,14 @@ return {
   main = 'ibl',
   ---@module 'ibl'
   ---@type ibl.config
-  opts = {},
+  opts = {
+    indent = { highlight = 'IblIndent' },
+    scope = {
+      enabled = true,
+      char = '┃',
+      highlight = 'IblScope',
+      show_start = false,
+      show_end = false,
+    },
+  },
 }

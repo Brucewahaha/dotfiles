@@ -7,13 +7,14 @@ UPDATE=0
 SYSTEM_MANAGER=""
 SYSTEM_INSTALL_AVAILABLE=0
 APT_UPDATED=0
+MISSING_DEPENDENCIES=""
 
 usage() {
     cat <<'EOF'
 Usage: bootstrap-zsh.sh [core|tools|all] [--update]
 
-core     Install git and zsh.
-tools    Ensure git and zsh, then install the Zsh framework, plugins, and tools.
+core     Install git, zsh, the Zsh framework, theme, and plugins.
+tools    Install optional command-line tools.
 all      Run core followed by tools (default).
 --update Update existing git-based Zsh dependencies.
 EOF
@@ -79,11 +80,6 @@ install_with_brew() {
     command -v brew >/dev/null 2>&1 && brew install "$package"
 }
 
-install_with_cargo() {
-    package="$1"
-    command -v cargo >/dev/null 2>&1 && cargo install "$package"
-}
-
 install_with_nix() {
     package="$1"
     command -v nix >/dev/null 2>&1 && nix profile install "nixpkgs#$package"
@@ -104,8 +100,7 @@ install_dependency() {
     dnf_package="$4"
     pacman_package="$5"
     brew_package="$6"
-    cargo_package="$7"
-    nix_package="$8"
+    nix_package="$7"
 
     if command_available "$binary"; then
         printf 'already installed: %s\n' "$binary"
@@ -116,13 +111,14 @@ install_dependency() {
         install_system_package "$apt_package" "$dnf_package" "$pacman_package" || true
     fi
     command_available "$binary" || install_with_brew "$brew_package" || true
-    command_available "$binary" || install_with_cargo "$cargo_package" || true
     command_available "$binary" || install_with_nix "$nix_package" || true
 
     if command_available "$binary"; then
         printf 'installed: %s\n' "$binary"
     else
         printf 'warning: %s is unavailable; install it manually if needed\n' "$name" >&2
+        MISSING_DEPENDENCIES="$MISSING_DEPENDENCIES $name"
+        return 1
     fi
 }
 
@@ -132,49 +128,61 @@ ensure_git_repo() {
 
     if [ -d "$dir/.git" ]; then
         if [ "$UPDATE" -eq 1 ]; then
-            git -C "$dir" pull --ff-only || printf 'warning: failed to update %s\n' "$dir" >&2
+            if ! git -C "$dir" pull --ff-only; then
+                printf 'warning: failed to update %s\n' "$dir" >&2
+                return 1
+            fi
         else
             printf 'already present: %s\n' "$dir"
         fi
     elif [ -d "$dir" ]; then
         printf 'warning: %s exists and is not a git repository\n' "$dir" >&2
+        return 1
     else
-        git clone "$url" "$dir" || printf 'warning: failed to clone %s\n' "$url" >&2
+        if ! git clone "$url" "$dir"; then
+            printf 'warning: failed to clone %s\n' "$url" >&2
+            return 1
+        fi
     fi
 }
 
 install_core() {
-    install_dependency git git git git git git git git
-    install_dependency zsh zsh zsh zsh zsh zsh zsh zsh
-}
+    CORE_FAILED=0
+    install_dependency git git git git git git git || CORE_FAILED=1
+    install_dependency zsh zsh zsh zsh zsh zsh zsh || CORE_FAILED=1
 
-install_tools() {
     if command -v git >/dev/null 2>&1; then
         plugin_dir="$HOME/.config/zsh/plugins"
         omz_dir="$HOME/.oh-my-zsh"
         theme_dir="$omz_dir/custom/themes"
         if mkdir -p "$plugin_dir" "$theme_dir"; then
-            ensure_git_repo https://github.com/ohmyzsh/ohmyzsh.git "$omz_dir"
-            ensure_git_repo https://github.com/zsh-users/zsh-autosuggestions.git "$plugin_dir/zsh-autosuggestions"
-            ensure_git_repo https://github.com/zsh-users/zsh-syntax-highlighting.git "$plugin_dir/zsh-syntax-highlighting"
-            ensure_git_repo https://github.com/romkatv/powerlevel10k.git "$theme_dir/powerlevel10k"
+            ensure_git_repo https://github.com/ohmyzsh/ohmyzsh.git "$omz_dir" || CORE_FAILED=1
+            ensure_git_repo https://github.com/zsh-users/zsh-autosuggestions.git "$plugin_dir/zsh-autosuggestions" || CORE_FAILED=1
+            ensure_git_repo https://github.com/zsh-users/zsh-syntax-highlighting.git "$plugin_dir/zsh-syntax-highlighting" || CORE_FAILED=1
+            ensure_git_repo https://github.com/romkatv/powerlevel10k.git "$theme_dir/powerlevel10k" || CORE_FAILED=1
         else
             printf '%s\n' 'warning: unable to create Zsh plugin directories' >&2
+            CORE_FAILED=1
         fi
     else
         printf '%s\n' 'warning: git is unavailable; skipping Zsh framework and plugins' >&2
+        CORE_FAILED=1
     fi
 
-    install_dependency bat bat bat bat bat bat bat bat
-    install_dependency lsd lsd lsd lsd lsd lsd lsd lsd
-    install_dependency tldr tldr tealdeer tealdeer tealdeer tealdeer tealdeer tealdeer
-    install_dependency fzf fzf fzf fzf fzf fzf fzf fzf
-    install_dependency zoxide zoxide zoxide zoxide zoxide zoxide zoxide zoxide
-    install_dependency yazi yazi yazi yazi yazi yazi yazi-fm yazi
-    install_dependency ripgrep rg ripgrep ripgrep ripgrep ripgrep ripgrep ripgrep
-    install_dependency fd fd fd-find fd-find fd fd fd-find fd
-    install_dependency direnv direnv direnv direnv direnv direnv direnv direnv
-    install_dependency atuin atuin atuin atuin atuin atuin atuin atuin
+    [ "$CORE_FAILED" -eq 0 ]
+}
+
+install_tools() {
+    install_dependency bat bat bat bat bat bat bat
+    install_dependency lsd lsd lsd lsd lsd lsd lsd
+    install_dependency tldr tldr tealdeer tealdeer tealdeer tealdeer tealdeer
+    install_dependency fzf fzf fzf fzf fzf fzf fzf
+    install_dependency zoxide zoxide zoxide zoxide zoxide zoxide zoxide
+    install_dependency yazi yazi yazi yazi yazi yazi yazi
+    install_dependency ripgrep rg ripgrep ripgrep ripgrep ripgrep ripgrep
+    install_dependency fd fd fd-find fd-find fd fd fd
+    install_dependency direnv direnv direnv direnv direnv direnv direnv
+    install_dependency atuin atuin atuin atuin atuin atuin atuin
 }
 
 parse_arguments() {
@@ -192,12 +200,19 @@ parse_arguments() {
 main() {
     parse_arguments "$@"
     detect_system_manager
+    STATUS=0
 
     case "$MODE" in
-        core) install_core ;;
-        tools) install_core; install_tools ;;
-        all) install_core; install_tools ;;
+        core) install_core || STATUS=1 ;;
+        tools) install_tools ;;
+        all) install_core || STATUS=1; install_tools ;;
     esac
+
+    if [ -n "$MISSING_DEPENDENCIES" ]; then
+        printf 'warning: install these commands manually:%s\n' "$MISSING_DEPENDENCIES" >&2
+    fi
+
+    return "$STATUS"
 }
 
 main "$@"

@@ -18,7 +18,7 @@
 
 ## 部署
 
-需要 `chezmoi`、网络和可用 shell。Zsh bootstrap 可使用系统包管理器、已安装的 Homebrew、Cargo 或 Nix；系统包安装需要 root 或 passwordless `sudo`。
+需要 `chezmoi`、网络和可用 shell。Zsh bootstrap 可使用系统包管理器、已安装的 Homebrew 或 Nix；系统包安装需要 root 或 passwordless `sudo`。
 
 ```sh
 chezmoi init --apply <repository-url>
@@ -49,12 +49,12 @@ Bootstrap 模式：
 ~/.config/zsh/bootstrap-zsh.sh all --update
 ```
 
-- `core`：安装或确认 `git`、`zsh`。
-- `tools`：确认 core 后，安装 Oh My Zsh、Powerlevel10k、Zsh 插件和常用命令行工具。
+- `core`：安装或确认 `git`、`zsh`，并安装 Oh My Zsh、Powerlevel10k 和 Zsh 插件。
+- `tools`：仅安装可选的常用命令行工具。
 - `all`：依次运行 core 与 tools。
 - `--update`：更新已克隆的 Zsh 依赖；默认只克隆缺失项。
 
-安装顺序为：有权限的系统包管理器、已有 Homebrew、Cargo、Nix。缺少权限或工具时会告警，但不会中断其余步骤。
+安装顺序为：有权限的系统包管理器、已有 Homebrew、Nix。缺少权限或工具时会告警并汇总需要手动安装的命令，但不会中断其余步骤。
 
 ## Zsh
 
@@ -71,6 +71,17 @@ Bootstrap 模式：
 ```sh
 zsh -n ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/core.zsh
 ```
+
+### Zsh 功能备忘
+
+- `alias -s`：后缀别名，根据文件扩展名选择打开命令。例如 `alias -s md='$EDITOR'` 后，直接输入 `README.md` 会用编辑器打开它。
+- `alias -g`：全局别名，可在命令行任意位置展开，适合管道片段。例如 `alias -g G='| grep'` 后可使用 `ps aux G ssh`。
+- `hash -d`：定义命名目录。例如 `hash -d proj=~/src/project` 后，可使用 `cd ~proj` 或 `ls ~proj`。
+- `zmv`：Zsh 的批量重命名函数。先执行 `autoload -Uz zmv`；`zmv -n -W '*.txt' '*.md'` 预览，确认后去掉 `-n` 执行。
+- `zle`：Zsh Line Editor，可查看和注册命令行编辑组件。使用 `zle -la` 查看 widgets，`zle -N name function` 将函数注册为 widget，再通过 `bindkey` 绑定。
+- `magic-space`：空格对应的 ZLE widget，会先展开 `!!`、`!$` 等历史引用，再插入空格，便于执行前检查实际命令。
+- `Ctrl-_`：撤销当前命令缓冲区中的上一次编辑；部分终端会将它显示或发送为 `Ctrl-/`。
+- `bindkey -s`：把按键绑定为一段输入宏。例如 `bindkey -s '^Xl' 'ls -la^M'`，按 `Ctrl-X l` 后输入并执行 `ls -la`。用 `bindkey -M viins -s ...` 可限定在 vi insert 模式。
 
 ## Neovim
 
