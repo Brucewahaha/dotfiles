@@ -32,9 +32,9 @@ input {
 binds {
     // Mod-Shift-/显示重要的热键列表(通常与 Mod-? 相同)。
     Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+D hotkey-overlay-title="Open the File Manager" { spawn "/usr/bin/dolphin"; }
+    Mod+D hotkey-overlay-title="Open the File Manager" { spawn "dolphin"; }
     Super+f hotkey-overlay-title="Run an Application" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+Ctrl+T hotkey-overlay-title="Open a Terminal" { spawn "/usr/bin/kitty"; }
+    Mod+Ctrl+T hotkey-overlay-title="Open a Terminal" { spawn "kitty"; }
     Super+V hotkey-overlay-title="Clipboard History" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
 
     Alt+Tab { spawn "niri-switch"; }
@@ -259,8 +259,8 @@ environment {
 spawn-at-startup "niri-switch-daemon"
 
 // 启动niri时自动启动的软件
-spawn-at-startup "/usr/bin/fcitx5"
-spawn-at-startup "/usr/lib/polkit-kde-authentication-agent-1"
+spawn-at-startup "fcitx5"
+spawn-sh-at-startup "for agent in /usr/lib/polkit-kde-authentication-agent-1 /usr/libexec/polkit-kde-authentication-agent-1 /usr/lib/x86_64-linux-gnu/libexec/polkit-kde-authentication-agent-1 /usr/lib/aarch64-linux-gnu/libexec/polkit-kde-authentication-agent-1; do [ -x \"$agent\" ] && exec \"$agent\"; done"
 spawn-at-startup "xwayland-satellite"
 // spawn-at-startup "/usr/bin/v2rayn"
 // spawn-at-startup "/usr/bin/vicinae" "server"

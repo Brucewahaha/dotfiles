@@ -1,6 +1,6 @@
 # Dotfiles
 
-使用 [chezmoi](https://www.chezmoi.io/) 管理的个人配置，包含 Zsh、Neovim、OpenCode、tmux、Niri、Noctalia 和 Code - OSS。
+使用 [chezmoi](https://www.chezmoi.io/) 管理的个人配置，包含 Zsh、Neovim、OpenCode、tmux、Niri、Noctalia、Fcitx5、Kitty、Zathura 和 Code - OSS。
 
 ## 目录
 
@@ -10,6 +10,8 @@
 - [Neovim](#neovim)
 - [OpenCode](#opencode)
 - [Niri 与 Noctalia](#niri-与-noctalia)
+- [Fcitx5 与 Kitty](#fcitx5-与-kitty)
+- [Zathura](#zathura)
 - [tmux](#tmux)
 - [Code - OSS](#code---oss)
 - [Chezmoi 命令](#chezmoi-命令)
@@ -129,13 +131,41 @@ niri msg outputs
 
 每台机器的显示器、缩放和位置写入未受管的 `~/.config/niri/local.kdl`。首次完整 apply 会创建空文件；受管的 `config.kdl` 会包含它。
 
-Noctalia 当前直接使用 `~/.face` 与 `~/Pictures/Wallpapers`，并在配置中保存为 `/home/bruce/...` 路径。其他机器需要调整 `~/.config/noctalia/settings.json` 后用 `chezmoi re-add` 写回 source，或自行维护这些资源路径。
+Noctalia 使用 `~/.face` 与 `~/Pictures/Wallpapers`。这些路径通过 chezmoi 的 `homeDir` 模板生成，可适配不同用户名和家目录。
 
 检查 Niri 配置：
 
 ```sh
 niri validate -c ~/.config/niri/config.kdl
 ```
+
+Niri 通过 `PATH` 启动 Dolphin、Kitty 和 Fcitx5，并自动探测 Arch、Debian 与 Fedora 常见的 KDE Polkit agent 路径。
+
+## Fcitx5 与 Kitty
+
+应用输入法和终端配置：
+
+```sh
+chezmoi apply ~/.config/fcitx5 ~/.config/kitty/kitty.conf
+```
+
+Fcitx5 配置包含小鹤双拼、输入法顺序、快捷键和界面设置。`cached_layouts`、个人词库与运行状态不受管理。Kitty 仅管理主配置；Noctalia/Dank 生成的 `dank-theme.conf` 和 `dank-tabs.conf` 保持本地。
+
+## Zathura
+
+应用配置：
+
+```sh
+chezmoi apply ~/.config/zathura
+```
+
+在 Debian 上安装 Zathura 及文档后端：
+
+```sh
+sudo apt install zathura zathura-pdf-poppler zathura-djvu zathura-ps
+```
+
+`zathurarc` 管理显示、滚动、剪贴板和快捷键。默认 PDF 文件关联另存于本机的 `~/.config/mimeapps.list`，当前尚未由 chezmoi 管理。
 
 ## tmux
 

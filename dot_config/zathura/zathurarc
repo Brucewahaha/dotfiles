@@ -1,0 +1,52 @@
+# ====================
+# 外观与显示设置
+# ====================
+set statusbar-bg "#282828"        # 状态栏背景色（暗色主题）
+set statusbar-fg "#ebdbb2"        # 状态栏前景色（文本颜色）
+set statusbar-font "monospace 10" # 状态栏字体
+set inputbar-font "monospace 10"  # 输入框字体
+
+set show-statusbar no           # 隐藏状态栏
+set show-index no               # 默认不显示目录
+set show-v-scrollbar true       # 显示右侧进度条
+set window-title "Zathura: %f"  # 窗口标题格式
+set window-title-basename true  # 只显示文件名
+
+# 颜色高亮
+set highlight-color "rgba(59, 78, 168, 0.3)"
+set highlight-active-color "rgba(80, 105, 255, 0.4)"
+
+# ====================
+# 行为与窗口设置
+# ====================
+set zoom-step 5                 # 缩放步长（5%）
+set smooth-scrolling yes        # 启用平滑滚动
+set confirm-exit no             # 关闭时不提示确认
+set selection-clipboard clipboard # 允许复制到系统剪贴板
+set page-padding 4              # 页面间距
+
+# 窗口默认大小
+set window-height 1360
+set window-width 1160
+
+# 打开文件时默认自动适应整个页面
+set default-zoom best-fit
+
+# 中文 pdf 实时搜索优化
+# set incremental-search false
+
+set guioptions 'hv'
+
+# ====================
+# 快捷键映射 (Key Map)
+# ====================
+
+# 缩放快捷键（Ctrl + / Ctrl -）
+map <C-=> zoom in
+map <C--> zoom out
+
+# 自动适应窗口大小快捷键
+# 按下 's' 键自动适应窗口宽度（最适合阅读 PDF）
+map s adjust width
+# 按下 'a' 键自动适应整个页面高度
+map a adjust best-fit

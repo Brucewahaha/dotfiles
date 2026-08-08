@@ -417,7 +417,7 @@
         "animationDisabled": true,
         "animationSpeed": 1,
         "autoStartAuth": false,
-        "avatarImage": "/home/bruce/.face",
+        "avatarImage": "{{ .chezmoi.homeDir }}/.face",
         "boxRadiusRatio": 1,
         "clockFormat": "hh\\nmmHH:mm ",
         "clockStyle": "custom",
@@ -708,7 +708,7 @@
     },
     "wallpaper": {
         "automationEnabled": false,
-        "directory": "/home/bruce/Pictures/Wallpapers",
+        "directory": "{{ .chezmoi.homeDir }}/Pictures/Wallpapers",
         "enableMultiMonitorDirectories": false,
         "enabled": true,
         "favorites": [
