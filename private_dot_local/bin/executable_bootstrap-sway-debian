@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -eu
+
+if [ ! -r /etc/os-release ]; then
+    printf '%s\n' 'Cannot determine the operating system.' >&2
+    exit 1
+fi
+
+# shellcheck disable=SC1091
+. /etc/os-release
+
+if [ "${ID:-}" != debian ] || [ "${VERSION_ID:-}" != 13 ]; then
+    printf '%s\n' 'This bootstrap supports Debian 13 only.' >&2
+    exit 1
+fi
+
+backports="${VERSION_CODENAME:-trixie}-backports"
+packages='git tmux sway waybar mako-notifier wofi swaylock swayidle swaybg wl-clipboard cliphist wtype grim slurp jq restic ufw smartmontools systemd-timesyncd network-manager network-manager-gnome bluez blueman upower thermald pipewire pipewire-pulse wireplumber fcitx5 fcitx5-chinese-addons fcitx5-frontend-gtk3 fcitx5-frontend-gtk4 fcitx5-frontend-qt5 fcitx5-frontend-qt6 fcitx5-config-qt im-config brightnessctl playerctl pavucontrol kitty dolphin kio-extras ffmpegthumbs xarchiver 7zip gnome-keyring libnotify-bin lxpolkit nwg-bar nwg-displays azote nwg-look wlogout qt5ct qt6ct xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk lightdm slick-greeter fonts-noto-core fonts-noto-cjk fonts-font-awesome'
+
+sudo apt-get update
+
+# Keep xkbcommon libraries on one version when another desktop pulled backports.
+case $(dpkg-query -W -f='${Version}' libxkbcommon0 2>/dev/null || true) in
+    *~bpo*) sudo apt-get install -y -t "$backports" libxkbregistry0 ;;
+esac
+
+# shellcheck disable=SC2086
+sudo apt-get install -y $packages
+if [ -n "${SSH_CONNECTION:-}${SSH_CLIENT:-}${SSH_TTY:-}" ]; then
+    printf '%s\n' 'warning: SSH session detected; skipping UFW policy changes' >&2
+else
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+    sudo ufw --force enable
+fi
+systemctl --user mask mako.service waybar.service
+sudo install -Dm644 "$HOME/.config/lightdm/lightdm.conf" /etc/lightdm/lightdm.conf
+sudo install -Dm644 "$HOME/.config/lightdm/slick-greeter.conf" /etc/lightdm/slick-greeter.conf
+if [ -r "$HOME/.local/share/backgrounds/graphite-login.png" ]; then
+    sudo install -Dm644 "$HOME/.local/share/backgrounds/graphite-login.png" /usr/local/share/backgrounds/graphite-login.png
+fi
+im-config -n fcitx5
+sudo systemctl enable NetworkManager bluetooth lightdm thermald systemd-timesyncd smartmontools
+systemctl --user enable --now pipewire.socket pipewire-pulse.socket wireplumber.service
+mkdir -p "$HOME/.config/sway"
+[ -e "$HOME/.config/sway/local" ] || : > "$HOME/.config/sway/local"
+[ -e "$HOME/.config/sway/outputs" ] || : > "$HOME/.config/sway/outputs"
+
+printf '%s\n' 'Sway packages and services are ready. Apply chezmoi, then reboot.'

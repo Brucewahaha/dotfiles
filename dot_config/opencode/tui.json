@@ -10,6 +10,7 @@
   "mouse": true,
   "keybinds": {
     "leader": "ctrl+x",
+    "input_newline": "ctrl+return,ctrl+j",
     "command_list": "ctrl+p",
     "scrollbar_toggle": "<leader>v",
     "sidebar_toggle": "<leader>b",

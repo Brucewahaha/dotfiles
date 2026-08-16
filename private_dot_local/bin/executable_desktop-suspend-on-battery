@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -eu
+
+for supply in /sys/class/power_supply/*; do
+    [ -r "$supply/type" ] || continue
+    [ -r "$supply/online" ] || continue
+
+    IFS= read -r type < "$supply/type"
+    case "$type" in
+        Mains|USB|USB_C|USB_PD)
+            IFS= read -r online < "$supply/online"
+            [ "$online" = 1 ] && exit 0
+            ;;
+    esac
+done
+
+systemctl suspend

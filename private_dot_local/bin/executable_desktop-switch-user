@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -eu
+
+session_id=${XDG_SESSION_ID:-}
+
+if [ -z "$session_id" ]; then
+    printf '%s\n' 'Cannot determine the current logind session.' >&2
+    exit 1
+fi
+
+"$HOME/.local/bin/desktop-lock"
+lock_pid=$(pgrep -n -u "$(id -u)" -x swaylock) || exit 1
+
+# LightDM clears LockedHint only after authenticating this session. Keep
+# swaylock in place for VT switches, then remove it after that trusted event.
+(
+    saw_lock=false
+    attempts=0
+
+    while kill -0 "$lock_pid" 2>/dev/null; do
+        locked=$(loginctl show-session "$session_id" -p LockedHint --value 2>/dev/null || true)
+
+        if [ "$locked" = yes ]; then
+            saw_lock=true
+        elif [ "$saw_lock" = true ]; then
+            kill "$lock_pid" 2>/dev/null || true
+            exit 0
+        else
+            attempts=$((attempts + 1))
+            [ "$attempts" -lt 50 ] || exit 1
+        fi
+
+        sleep 0.2
+    done
+) &
+
+dm-tool lock

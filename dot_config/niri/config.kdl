@@ -33,9 +33,9 @@ binds {
     // Mod-Shift-/显示重要的热键列表(通常与 Mod-? 相同)。
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+D hotkey-overlay-title="Open the File Manager" { spawn "dolphin"; }
-    Super+f hotkey-overlay-title="Run an Application" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Super+f hotkey-overlay-title="Run an Application" { spawn-sh "noctalia msg panel-toggle launcher"; }
     Mod+Ctrl+T hotkey-overlay-title="Open a Terminal" { spawn "kitty"; }
-    Super+V hotkey-overlay-title="Clipboard History" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "clipboard"; }
+    Super+V hotkey-overlay-title="Clipboard History" { spawn-sh "noctalia msg panel-toggle clipboard"; }
 
     Alt+Tab { spawn "niri-switch"; }
     // Mod+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "/usr/bin/swaylock" "-f" "-i" "$HOME/.dotfiles/sway/.config/sway/lock.png"; }
@@ -47,17 +47,17 @@ binds {
     // Mod+Shift+C hotkey-overlay-title="重启waybar" { spawn-sh "pkill waybar && waybar"; }
 
     // 音量控制 allow-when-locked=true 在锁屏时的按键也会生效。这里的wpctl是wireplumber包中附带的
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "noctalia msg volume-mute"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
     XF86AudioPlay        allow-when-locked=true { spawn "playerctl" "play-pause"; }
     XF86AudioPrev        allow-when-locked=true { spawn "playerctl" "previous"; }
     XF86AudioNext        allow-when-locked=true { spawn "playerctl" "next"; }
 
     // 亮度控制。brightnessctl 有独立的包
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "10%-"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn-sh "noctalia msg brightness-up"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn-sh "noctalia msg brightness-down"; }
 
     // 开关overview
     Super+Tab repeat=false { toggle-overview; }
@@ -266,7 +266,7 @@ spawn-at-startup "xwayland-satellite"
 // spawn-at-startup "/usr/bin/vicinae" "server"
 // spawn-at-startup "/usr/bin/waybar"
 // spawn-at-startup "~/.cargo/bin/soteria"
-spawn-at-startup "qs" "-c" "noctalia-shell"
+spawn-at-startup "noctalia"
 // 要运行shell命令（带有变量，管道等），请使用spawn-sh-at-at-startup：
 
 hotkey-overlay {
@@ -290,7 +290,7 @@ cursor {
 
 // 使用`niri msg windows`查看Title和App ID等信息
 window-rule {
-    // open-on-output "HDMI-A-2"
+    // open-on-output "EXTERNAL-1"
     // default-window-height { proportion 0.9; }
     // default-floating-position x=100 y=200 relative-to="bottom-left"
     // default-column-width { proportion 0.7556; }
@@ -317,9 +317,15 @@ window-rule {
     match app-id="clash-verge"
     open-floating true
 }
+window-rule {
+    match app-id="dev.noctalia.Noctalia"
+    open-floating true
+    default-column-width { fixed 1080; }
+    default-window-height { fixed 920; }
+}
 // `niri msg layers`显示有namespace可以在这里配置waybar透明度
 layer-rule {
-    match namespace="^quickshell-overview$"
+    match namespace="^noctalia-backdrop$"
     place-within-backdrop true
     //     opacity 0.75
 }

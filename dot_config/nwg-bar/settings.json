@@ -1,0 +1,62 @@
+[
+  {
+    "label": "_Network",
+    "exec": "nm-connection-editor",
+    "icon": "network-wireless-symbolic"
+  },
+  {
+    "label": "_Bluetooth",
+    "exec": "blueman-manager",
+    "icon": "bluetooth-symbolic"
+  },
+  {
+    "label": "_Audio",
+    "exec": "pavucontrol",
+    "icon": "audio-volume-high-symbolic"
+  },
+  {
+    "label": "_Displays",
+    "exec": "nwg-displays -n 10",
+    "icon": "video-display-symbolic"
+  },
+  {
+    "label": "_Wallpaper",
+    "exec": "azote",
+    "icon": "preferences-desktop-wallpaper-symbolic"
+  },
+  {
+    "label": "_Appearance",
+    "exec": "nwg-look",
+    "icon": "preferences-desktop-appearance-symbolic"
+  },
+  {
+    "label": "_Input Method",
+    "exec": "fcitx5-configtool",
+    "icon": "input-keyboard-symbolic"
+  },
+  {
+    "label": "Qt _5",
+    "exec": "qt5ct",
+    "icon": "preferences-desktop-font-symbolic"
+  },
+  {
+    "label": "Qt _6",
+    "exec": "qt6ct",
+    "icon": "preferences-desktop-font-symbolic"
+  },
+  {
+    "label": "_Waybar",
+    "exec": "nwg-bar -f -g Adwaita-dark -t waybar.json -s settings.css -i 40",
+    "icon": "preferences-system-symbolic"
+  },
+  {
+    "label": "_Switch user",
+    "exec": "~/.local/bin/desktop-switch-user",
+    "icon": "system-switch-user-symbolic"
+  },
+  {
+    "label": "_Power",
+    "exec": "wlogout -b 5",
+    "icon": "system-shutdown-symbolic"
+  }
+]

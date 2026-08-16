@@ -1,0 +1,22 @@
+[
+  {
+    "label": "_Restart",
+    "exec": "sh -c 'pkill -x waybar; swaymsg exec waybar'",
+    "icon": "view-refresh-symbolic"
+  },
+  {
+    "label": "_Modules",
+    "exec": "sh -c 'kitty --class waybar-config -e nvim \"$HOME/.config/waybar/config.jsonc\"'",
+    "icon": "document-edit-symbolic"
+  },
+  {
+    "label": "_Style",
+    "exec": "sh -c 'kitty --class waybar-style -e nvim \"$HOME/.config/waybar/style.css\"'",
+    "icon": "preferences-desktop-appearance-symbolic"
+  },
+  {
+    "label": "_Back",
+    "exec": "nwg-bar -f -g Adwaita-dark -t settings.json -s settings.css -i 40",
+    "icon": "go-previous-symbolic"
+  }
+]

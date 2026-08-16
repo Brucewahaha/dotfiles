@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+
+def mime_type(data: bytes) -> tuple[str, str] | None:
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png", ".png"
+    if data.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg", ".jpg"
+    if data.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif", ".gif"
+    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+        return "image/webp", ".webp"
+    return None
+
+
+mode = sys.argv[1] if len(sys.argv) > 1 else "text"
+if mode not in ("text", "images"):
+    raise SystemExit(f"Usage: {sys.argv[0]} [text|images]")
+
+result = subprocess.run(["cliphist", "list"], check=True, capture_output=True)
+history = result.stdout.decode("utf-8", errors="replace").splitlines()
+if not history:
+    raise SystemExit(0)
+
+entries: list[tuple[str, bytes, tuple[str, str] | None]] = []
+for entry in history:
+    data = subprocess.run(
+        ["cliphist", "decode"], input=entry.encode(), check=True, capture_output=True
+    ).stdout
+    image = mime_type(data)
+    is_binary = "[[ binary data" in entry
+    if mode == "images" and image is not None:
+        entries.append((entry, data, image))
+    elif mode == "text" and not is_binary:
+        entries.append((entry, data, image))
+
+if not entries:
+    subprocess.run(
+        ["notify-send", "-a", "Clipboard", f"No {mode} clipboard entries"], check=False
+    )
+    raise SystemExit(0)
+
+with tempfile.TemporaryDirectory(prefix="clipboard-thumbnails-") as directory:
+    menu = bytearray()
+    for index, (entry, data, image) in enumerate(entries):
+        if image:
+            _, suffix = image
+            path = Path(directory, f"{index}{suffix}")
+            path.write_bytes(data)
+            menu.extend(f"img:{path}:text:".encode())
+        else:
+            menu.extend(entry.encode())
+        menu.extend(b"\n")
+
+    config_name = "clipboard-images" if mode == "images" else "clipboard"
+    selection = subprocess.run(
+        [
+            "wofi",
+            f"--conf={Path.home() / f'.config/wofi/{config_name}.conf'}",
+            f"--style={Path.home() / f'.config/wofi/{config_name}.css'}",
+            "--dmenu",
+            *(["--allow-images"] if mode == "images" else []),
+        ],
+        input=bytes(menu),
+        capture_output=True,
+    )
+    if selection.returncode != 0:
+        raise SystemExit(0)
+
+    index = int(selection.stdout.strip())
+    _, data, image = entries[index]
+    mime = image[0] if image else "text/plain;charset=utf-8"
+    subprocess.run(["wl-copy", "--type", mime], input=data, check=True)
+
+time.sleep(0.15)
+subprocess.run(["wtype", "-M", "ctrl", "-k", "v", "-m", "ctrl"], check=True)

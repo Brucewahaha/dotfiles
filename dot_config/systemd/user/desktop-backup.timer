@@ -1,0 +1,11 @@
+[Unit]
+Description=Check whether the three-day Home backup is due
+
+[Timer]
+OnCalendar=*-*-* 20:00:00
+Persistent=true
+RandomizedDelaySec=30m
+Unit=desktop-backup.service
+
+[Install]
+WantedBy=timers.target

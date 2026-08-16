@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -eu
+
+repository=${RESTIC_REPOSITORY:-/data/Backups/restic}
+backup_mount=${BACKUP_MOUNTPOINT:-/data}
+password_file=${RESTIC_PASSWORD_FILE:-$HOME/.config/restic/password}
+exclude_file="$HOME/.config/restic/excludes"
+interval_seconds=259200
+
+if ! mountpoint -q "$backup_mount"; then
+    notify-send -u critical 'Backup skipped' "$backup_mount is not mounted."
+    exit 1
+fi
+
+if [ ! -r "$password_file" ]; then
+    notify-send -u critical 'Backup skipped' 'The Restic password file is unavailable.'
+    exit 1
+fi
+
+export RESTIC_REPOSITORY=$repository
+export RESTIC_PASSWORD_FILE=$password_file
+
+if [ "${1:-}" != --force ]; then
+    latest=$(restic snapshots --latest 1 --json | jq -r '.[0].time // empty')
+    if [ -n "$latest" ]; then
+        latest_epoch=$(date -d "$latest" +%s)
+        now_epoch=$(date +%s)
+        [ $((now_epoch - latest_epoch)) -ge "$interval_seconds" ] || exit 0
+    fi
+fi
+
+restic backup "$HOME" --exclude-file "$exclude_file" --exclude-caches --tag three-day
+restic forget --keep-weekly 8 --keep-monthly 12 --keep-yearly 3 --prune
+
+notify-send 'Backup complete' 'The three-day Home backup finished successfully.' || true

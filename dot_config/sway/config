@@ -1,0 +1,194 @@
+# Sway desktop profile. Shared services are independent from XFCE and Noctalia.
+set $mod Mod1
+set $left h
+set $down j
+set $up k
+set $right l
+set $term kitty
+set $menu wofi --conf ~/.config/wofi/launcher.conf --style ~/.config/wofi/style.css --show drun
+set $ws1 "1.Web"
+set $ws2 "2.Dev"
+set $ws3 "3.Doc"
+set $ws4 "4.Note"
+set $ws5 "5.Chat"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8.Sys"
+set $ws9 "9.AI"
+set $ws10 "10"
+set $settings_apps (?i)(nm-connection-editor|blueman-manager|pavucontrol|nwg-displays|azote|nwg-look|fcitx.*config|qt5ct|qt6ct)
+
+font pango:Noto Sans 10
+floating_modifier $mod normal
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 3
+gaps outer 3
+smart_gaps on
+hide_edge_borders smart
+focus_follows_mouse no
+mouse_warping output
+default_orientation auto
+workspace_layout default
+tiling_drag enable
+
+client.focused          #81a1c1 #20252b #f2f4f5 #81a1c1 #81a1c1
+client.focused_inactive #59636d #20252b #c8cdd2 #59636d #59636d
+client.unfocused        #4c566a #20252b #9ba3aa #4c566a #4c566a
+client.urgent           #e06c75 #20252b #ffffff #e06c75 #e06c75
+client.placeholder      #384149 #20252b #9ba3aa #384149 #384149
+client.background       #15191e
+
+output * bg #15191e solid_color
+
+input type:keyboard {
+    xkb_layout us
+    xkb_numlock enabled
+}
+
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+    dwt enabled
+    middle_emulation enabled
+}
+
+# Import the Wayland session into user services and D-Bus activation.
+exec_always --no-startup-id systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+exec_always --no-startup-id dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+
+exec --no-startup-id fcitx5 -d
+exec --no-startup-id waybar
+exec --no-startup-id mako
+exec --no-startup-id lxpolkit
+exec --no-startup-id wl-paste --type text --watch cliphist store
+exec --no-startup-id wl-paste --type image --watch cliphist store
+exec --no-startup-id swayidle -w timeout 300 '$HOME/.local/bin/desktop-lock' timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' timeout 1800 '$HOME/.local/bin/desktop-suspend-on-battery' timeout 3600 'systemctl suspend' before-sleep '$HOME/.local/bin/desktop-lock'
+exec --no-startup-id sh -c '[ -x "$HOME/.azotebg" ] && "$HOME/.azotebg"'
+
+# Applications and desktop actions.
+bindsym $mod+Ctrl+t exec $term
+bindsym $mod+d exec dolphin
+bindsym Mod4+f exec $menu
+bindsym Mod4+v exec ~/.local/bin/desktop-clipboard text
+bindsym Mod4+Shift+v exec ~/.local/bin/desktop-clipboard images
+bindsym Mod4+l exec ~/.local/bin/desktop-lock
+bindsym Mod4+Shift+l exec ~/.local/bin/desktop-switch-user
+bindsym Mod4+x exec ~/.local/bin/desktop-session-menu
+bindsym Mod4+comma exec nwg-bar -f -g Adwaita-dark -t settings.json -s settings.css -i 40
+bindsym Mod4+Shift+o exec ~/.local/bin/desktop-toggle-output
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+e exec ~/.local/bin/desktop-session-menu
+
+# Focus and move containers with Vim keys.
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Named workspaces. Moving a container also follows it to the destination.
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+bindsym $mod+Shift+1 move container to workspace $ws1, workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2, workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3, workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4, workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5, workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6, workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7, workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8, workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9, workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10, workspace $ws10
+bindsym $mod+Shift+a move workspace to output left
+bindsym $mod+Shift+d move workspace to output right
+
+# Layout and scratchpad.
+bindsym $mod+b splith
+bindsym $mod+v splitv
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+c focus child
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+mode "resize" {
+    bindsym $left resize shrink width 2 ppt
+    bindsym $down resize grow height 2 ppt
+    bindsym $up resize shrink height 2 ppt
+    bindsym $right resize grow width 2 ppt
+    bindsym Left resize shrink width 2 ppt
+    bindsym Down resize grow height 2 ppt
+    bindsym Up resize shrink height 2 ppt
+    bindsym Right resize grow width 2 ppt
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Hardware and media keys.
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+
+bindsym Print exec ~/.local/bin/desktop-screenshot output
+bindsym Shift+Print exec ~/.local/bin/desktop-screenshot area
+
+for_window [app_id="lxpolkit"] floating enable
+for_window [title="(?i)picture.?in.?picture"] floating enable, sticky enable
+for_window [app_id="$settings_apps"] floating enable, resize set 1000 700, move position center
+for_window [app_id="$settings_apps"] border normal
+for_window [class="$settings_apps"] floating enable, resize set 1000 700, move position center, border normal
+for_window [title="(?i)^(Network Connections|Bluetooth Devices|PulseAudio Volume Control|Qt5 Settings|Qt6 Settings|Fcitx 5 Configuration)$"] floating enable, resize set 1000 700, move position center, border normal
+
+# Sway title bars do not draw close buttons; middle-click closes the window.
+bindsym --release button2 kill
+
+# Application workspace routing. Match both native Wayland app IDs and XWayland classes.
+assign [app_id="(?i)^(microsoft-edge|com.microsoft.Edge)$"] $ws1
+assign [class="(?i)^microsoft-edge$"] $ws1
+assign [app_id="(?i)^(code|code-oss|codium|zed|emacs)$"] $ws2
+assign [class="(?i)^(Code|VSCodium|Zed|Emacs)$"] $ws2
+assign [app_id="(?i)^obsidian$"] $ws4
+assign [class="(?i)^obsidian$"] $ws4
+assign [app_id="(?i)^(discord|wechat|weixin|qq)$"] $ws5
+assign [class="(?i)^(discord|wechat|weixin|qq)$"] $ws5
+assign [app_id="^kitty$"] $ws8
+assign [app_id="(?i)^(cherry-studio|cherrystudio)$"] $ws9
+assign [class="(?i)^(cherry-studio|cherrystudio)$"] $ws9
+
+include /etc/sway/config.d/*
+include ~/.config/sway/outputs
+include ~/.config/sway/local

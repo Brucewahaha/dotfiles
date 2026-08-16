@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -eu
+
+wallpaper="$HOME/.local/share/backgrounds/graphite-login.png"
+
+if [ -r "$wallpaper" ]; then
+    exec swaylock -f --image "$wallpaper" --scaling fill
+fi
+
+exec swaylock -f

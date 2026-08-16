@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -eu
+
+update=false
+[ "${1:-}" = --update ] && update=true
+
+for command in git tmux; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        printf 'error: %s is required\n' "$command" >&2
+        exit 1
+    fi
+done
+
+tpm_dir="$HOME/.tmux/plugins/tpm"
+mkdir -p "$(dirname "$tpm_dir")"
+
+if [ -d "$tpm_dir/.git" ]; then
+    [ "$update" = false ] || git -C "$tpm_dir" pull --ff-only
+elif [ -e "$tpm_dir" ]; then
+    printf 'error: %s exists but is not a Git repository\n' "$tpm_dir" >&2
+    exit 1
+else
+    git clone https://github.com/tmux-plugins/tpm "$tpm_dir"
+fi
+
+"$tpm_dir/bin/install_plugins"

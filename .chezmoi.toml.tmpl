@@ -1,0 +1,6 @@
+{{- $choices := list "sway" "niri" "all" "core" -}}
+{{- $profile := promptChoiceOnce . "desktopProfile" "Desktop profile" $choices "sway" -}}
+umask = 0o022
+
+[data]
+desktopProfile = {{ $profile | quote }}

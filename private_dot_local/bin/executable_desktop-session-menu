@@ -1,0 +1,12 @@
+#!/bin/sh
+
+choice=$(printf '%s\n' 'Lock' 'Switch user' 'Suspend' 'Logout' 'Reboot' 'Power off' | wofi --dmenu --prompt='Session' --width=420 --height=400 --lines=6 --gtk-dark --style="$HOME/.config/wofi/style.css") || exit 0
+
+case "$choice" in
+    Lock) "$HOME/.local/bin/desktop-lock" ;;
+    'Switch user') "$HOME/.local/bin/desktop-switch-user" ;;
+    Suspend) systemctl suspend ;;
+    Logout) swaymsg exit ;;
+    Reboot) systemctl reboot ;;
+    'Power off') systemctl poweroff ;;
+esac

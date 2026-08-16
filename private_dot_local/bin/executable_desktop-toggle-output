@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -eu
+
+output=${1:-}
+outputs=$(swaymsg -t get_outputs -r)
+
+if [ -z "$output" ]; then
+    output=$(printf '%s' "$outputs" | jq -r '[.[] | select(.name | test("^(eDP|LVDS|DSI)-") | not)][0].name // empty')
+fi
+
+if [ -z "$output" ] && [ -r "$HOME/.config/sway/outputs" ]; then
+    while read -r directive candidate _; do
+        [ "$directive" = output ] || continue
+        candidate=${candidate#\"}
+        candidate=${candidate%\"}
+
+        case "$candidate" in
+            eDP-*|LVDS-*|DSI-*) continue ;;
+            *) output=$candidate; break ;;
+        esac
+    done < "$HOME/.config/sway/outputs"
+fi
+
+if [ -z "$output" ]; then
+    notify-send -u critical -a Displays 'No external output is configured'
+    exit 1
+fi
+
+active=$(printf '%s' "$outputs" | jq -r --arg output "$output" '.[] | select(.name == $output) | .active')
+
+case "$active" in
+    true)
+        swaymsg "output \"$output\" disable" >/dev/null
+        notify-send -a Displays "$output disabled"
+        ;;
+    false)
+        swaymsg "output \"$output\" enable" >/dev/null
+        swaymsg reload >/dev/null
+        notify-send -a Displays "$output enabled"
+        ;;
+    *)
+        notify-send -u critical -a Displays "$output is not connected"
+        exit 1
+        ;;
+esac

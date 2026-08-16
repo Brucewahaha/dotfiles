@@ -1,0 +1,58 @@
+README.md
+
+{{- $profile := get . "desktopProfile" | default "sway" }}
+
+{{- if and (ne $profile "niri") (ne $profile "all") }}
+.config/niri
+.config/niri/**
+.config/noctalia
+.config/noctalia/**
+.config/systemd/user/niri.service
+.config/systemd/user/niri-shutdown.target
+.local/bin/niri-session
+.local/share/wayland-sessions/niri.desktop
+create_niri_local.sh
+{{- end }}
+
+{{- if and (ne $profile "sway") (ne $profile "all") }}
+.config/sway
+.config/sway/**
+.config/swaylock
+.config/swaylock/**
+.config/waybar
+.config/waybar/**
+.config/mako
+.config/mako/**
+.config/wofi
+.config/wofi/**
+.config/nwg-bar
+.config/nwg-bar/**
+.config/wlogout
+.config/wlogout/**
+.config/xdg-desktop-portal
+.config/xdg-desktop-portal/**
+.config/systemd/user/mako.service
+.config/systemd/user/waybar.service
+.local/bin/bootstrap-sway-debian
+.local/bin/desktop-clipboard
+.local/bin/desktop-lock
+.local/bin/desktop-screenshot
+.local/bin/desktop-session-menu
+.local/bin/desktop-suspend-on-battery
+.local/bin/desktop-switch-user
+.local/bin/desktop-toggle-output
+{{- end }}
+
+{{- if eq $profile "core" }}
+.config/lightdm
+.config/lightdm/**
+.config/restic
+.config/restic/**
+.config/systemd/user/desktop-backup.service
+.config/systemd/user/desktop-backup.timer
+.config/xfce4
+.config/xfce4/**
+.local/bin/desktop-backup
+.local/share/backgrounds
+.local/share/backgrounds/**
+{{- end }}

@@ -1,0 +1,120 @@
+* {
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  font-family: "Noto Sans", "FontAwesome", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+window#waybar {
+  background: #171b20;
+  color: #dce1e5;
+  border-top: 1px solid #303840;
+}
+
+#workspaces button {
+  min-width: 30px;
+  padding: 0 7px;
+  color: #8f99a3;
+  background: transparent;
+  border-top: 2px solid transparent;
+}
+
+#workspaces button.focused {
+  color: #f2f4f5;
+  background: #252c33;
+  border-top-color: #59c2b1;
+}
+
+#workspaces button.urgent {
+  color: #ffffff;
+  background: #b84d57;
+}
+
+#mode {
+  padding: 0 10px;
+  color: #171b20;
+  background: #e5b567;
+}
+
+#window {
+  padding: 0 12px;
+  color: #aeb6bd;
+}
+
+#mpris {
+  padding: 0 12px;
+  color: #b8c5d1;
+}
+
+#idle_inhibitor,
+#backlight,
+#network,
+#bluetooth,
+#pulseaudio,
+#battery,
+#tray,
+#custom-notifications,
+#clock,
+#custom-display,
+#custom-settings,
+#custom-power {
+  padding: 0 9px;
+  border-left: 1px solid #303840;
+}
+
+#network.disconnected,
+#pulseaudio.muted,
+#battery.critical {
+  color: #ef7a83;
+}
+
+#battery.warning {
+  color: #e5b567;
+}
+
+#battery.charging,
+#network.wifi,
+#idle_inhibitor.activated {
+  color: #69c3a5;
+}
+
+#custom-power {
+  color: #ef7a83;
+  font-weight: 700;
+}
+
+#custom-settings {
+  color: #81a1c1;
+}
+
+#custom-display {
+  color: #69c3a5;
+}
+
+#bluetooth.disabled,
+#bluetooth.off,
+#bluetooth.no-controller {
+  color: #59636d;
+}
+
+#bluetooth.connected,
+#custom-notifications {
+  color: #81a1c1;
+}
+
+#idle_inhibitor,
+#custom-notifications,
+#custom-display,
+#custom-settings,
+#custom-power {
+  min-width: 20px;
+}
+
+tooltip {
+  background: #20262c;
+  color: #e8ebed;
+  border: 1px solid #46515b;
+  border-radius: 4px;
+}

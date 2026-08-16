@@ -1,0 +1,12 @@
+[Unit]
+Description=Back up Home to the local Restic repository
+After=default.target
+
+[Service]
+Type=oneshot
+Environment=GOMEMLIMIT=1GiB
+EnvironmentFile=-%h/.config/restic/environment
+ExecStart=%h/.local/bin/desktop-backup
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=6h

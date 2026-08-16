@@ -1,0 +1,117 @@
+{
+  "layer": "top",
+  "position": "bottom",
+  "height": 34,
+  "spacing": 0,
+  "reload_style_on_change": true,
+  "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
+  "modules-center": ["mpris"],
+  "modules-right": ["idle_inhibitor", "backlight", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications", "clock", "custom/display", "tray", "custom/settings", "custom/power"],
+  "sway/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{name}",
+    "persistent-workspaces": {"*": ["1.Web", "2.Dev", "3.Doc", "4.Note", "5.Chat", "8.Sys", "9.AI"]}
+  },
+  "sway/mode": {
+    "format": "MODE: {}"
+  },
+  "sway/window": {
+    "format": "{title}",
+    "max-length": 60,
+    "rewrite": {"(.*) - Microsoft Edge": "$1"}
+  },
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "{status_icon} {dynamic}",
+    "player-icons": {"default": ""},
+    "status-icons": {"paused": ""},
+    "dynamic-order": ["title", "artist"],
+    "dynamic-len": 36,
+    "ignored-players": ["firefox.instance1"]
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {"activated": "", "deactivated": ""},
+    "tooltip-format-activated": "Automatic lock is paused",
+    "tooltip-format-deactivated": "Automatic lock is enabled"
+  },
+  "backlight": {
+    "format": " {percent}%",
+    "on-scroll-up": "brightnessctl set 5%+",
+    "on-scroll-down": "brightnessctl set 5%-"
+  },
+  "network": {
+    "format-wifi": " {signalStrength}%",
+    "format-ethernet": "",
+    "format-linked": "",
+    "format-disconnected": "",
+    "tooltip-format-wifi": "{essid}\n{ifname}: {ipaddr}/{cidr}",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
+    "on-click": "nm-connection-editor",
+    "on-click-right": "nwg-bar -f -g Adwaita-dark -t settings.json -s settings.css -i 40"
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "",
+    "format-off": "",
+    "format-on": "",
+    "format-connected": " {num_connections}",
+    "format-no-controller": "",
+    "tooltip-format-connected": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager",
+    "on-click-right": "nwg-bar -f -g Adwaita-dark -t settings.json -s settings.css -i 40"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": " ×",
+    "format-bluetooth": " {volume}%",
+    "format-icons": ["", "", ""],
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol"
+  },
+  "battery": {
+    "interval": 30,
+    "states": {"warning": 30, "critical": 15},
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "tooltip-format": "{timeTo} remaining"
+  },
+  "tray": {
+    "icon-size": 17,
+    "spacing": 8
+  },
+  "custom/notifications": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Left: restore last notification\nRight: dismiss all",
+    "on-click": "makoctl restore",
+    "on-click-right": "makoctl dismiss --all"
+  },
+  "clock": {
+    "interval": 1,
+    "format": "{:%H:%M}",
+    "format-alt": "{:%Y-%m-%d %A}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+  "custom/settings": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "nwg-bar -f -g Adwaita-dark -t settings.json -s settings.css -i 40"
+  },
+  "custom/display": {
+    "format": "",
+    "tooltip": true,
+    "tooltip-format": "Toggle external display",
+    "on-click": "~/.local/bin/desktop-toggle-output"
+  },
+  "custom/power": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "~/.local/bin/desktop-session-menu"
+  }
+}

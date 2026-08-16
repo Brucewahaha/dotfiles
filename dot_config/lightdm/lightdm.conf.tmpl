@@ -1,0 +1,4 @@
+[Seat:*]
+greeter-session=slick-greeter
+greeter-hide-users=false
+user-session={{ if eq (get . "desktopProfile" | default "sway") "niri" }}niri{{ else }}sway{{ end }}
