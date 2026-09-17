@@ -22,8 +22,8 @@ font pango:Noto Sans 10
 floating_modifier $mod normal
 default_border pixel 2
 default_floating_border pixel 2
-gaps inner 3
-gaps outer 3
+gaps inner 0
+gaps outer 0
 smart_gaps on
 hide_edge_borders smart
 focus_follows_mouse no
@@ -38,8 +38,6 @@ client.unfocused        #4c566a #20252b #9ba3aa #4c566a #4c566a
 client.urgent           #e06c75 #20252b #ffffff #e06c75 #e06c75
 client.placeholder      #384149 #20252b #9ba3aa #384149 #384149
 client.background       #15191e
-
-output * bg #15191e solid_color
 
 input type:keyboard {
     xkb_layout us
@@ -63,8 +61,9 @@ exec --no-startup-id mako
 exec --no-startup-id lxpolkit
 exec --no-startup-id wl-paste --type text --watch cliphist store
 exec --no-startup-id wl-paste --type image --watch cliphist store
-exec --no-startup-id swayidle -w timeout 300 '$HOME/.local/bin/desktop-lock' timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' timeout 1800 '$HOME/.local/bin/desktop-suspend-on-battery' timeout 3600 'systemctl suspend' before-sleep '$HOME/.local/bin/desktop-lock'
-exec --no-startup-id sh -c '[ -x "$HOME/.azotebg" ] && "$HOME/.azotebg"'
+# Do not lock automatically; manual lock actions remain available.
+exec --no-startup-id swayidle -w timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' timeout 1800 '$HOME/.local/bin/desktop-suspend-on-battery' timeout 3600 'systemctl suspend'
+exec_always --no-startup-id sh -c '[ -x "$HOME/.azotebg" ] && "$HOME/.azotebg"'
 
 # Applications and desktop actions.
 bindsym $mod+Ctrl+t exec $term

@@ -205,7 +205,7 @@ RESTIC_REPOSITORY=/data/Backups/restic RESTIC_PASSWORD_FILE=~/.config/restic/pas
   restic restore latest --target /tmp/restic-restore --include "$HOME/path/to/file"
 ```
 
-Swayidle 在 5 分钟锁屏、10 分钟关闭显示器；电池供电时 30 分钟挂起，接电时 60 分钟挂起。Waybar idle inhibitor 可暂停这些超时。UPower 在 2% 电量执行 HybridSleep，thermald 管理 Intel CPU 温控。systemd-timesyncd 提供网络时间同步，smartd 使用 standby-aware 规则监控系统 SSD 和 1TB 机械盘。
+Swayidle 默认不自动锁屏，10 分钟关闭显示器；电池供电时 30 分钟挂起，接电时 60 分钟挂起。Waybar idle inhibitor 可暂停这些超时。UPower 在 2% 电量执行 HybridSleep，thermald 管理 Intel CPU 温控。systemd-timesyncd 提供网络时间同步，smartd 使用 standby-aware 规则监控系统 SSD 和 1TB 机械盘。
 
 UFW 使用 IPv4/IPv6 默认拒绝入站、允许出站的基础策略，未预先开放服务端口；新增局域网服务时应按需添加规则。系统盘与数据盘当前均未使用 LUKS，磁盘加密留待下次重装时处理。本地 Restic 仓库不能防整机丢失或数据盘故障，外置或远端第二副本尚未配置；`/data/Project` 和 Obsidian 的反向 SSD 备份也尚未配置。安全更新保持手动安装，未启用 unattended-upgrades 或 fwupd。
 
@@ -302,6 +302,8 @@ chezmoi cd
 chezmoi status
 chezmoi diff
 ```
+
+`chezmoi cd` 固定启动交互式 zsh，因此会加载 `~/.config/zsh/.zshrc` 中的主题、别名和插件；不要在命令前临时覆盖 `SHELL` 或 `ZDOTDIR`，否则 shell 检测或启动文件路径会被改变。
 
 将本机修改写回 source：
 

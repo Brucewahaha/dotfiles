@@ -2,5 +2,9 @@
 {{- $profile := promptChoiceOnce . "desktopProfile" "Desktop profile" $choices "sway" -}}
 umask = 0o022
 
+[cd]
+command = "zsh"
+args = ["-i"]
+
 [data]
 desktopProfile = {{ $profile | quote }}
